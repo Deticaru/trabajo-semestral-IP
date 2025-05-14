@@ -31,3 +31,8 @@ npm run dev
 ### INSTALAR REQUERIMIENTO QUE PERMITE UTILIZAR 1 TERMINAL PARA CORRER REACT+DJANGO
 npm install --save-dev npm-run-all
 
+### CREACIÓN DE ADMIN PARA PROCESOS INTERNOS
+python manage.py createsuperuser
+### nombre:     admin
+### contraseña: admin
+
