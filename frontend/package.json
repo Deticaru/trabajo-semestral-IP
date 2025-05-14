@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "npm-run-all --parallel dev:vite dev:django",
+    "dev:vite": "vite",
+    "dev:django": "cd ../backend && python manage.py runserver",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
