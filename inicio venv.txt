@@ -1,3 +1,5 @@
+
+### AMBIENTE VIRTUAL
 python -m venv env
 cd env
 cd scripts
@@ -5,15 +7,27 @@ cd scripts
 cd..
 cd..
 pip install django djangorestframework
+#####
+
+## INICIO DE PROYECTO (BACKEND)
 django-admin startproject backend
 cd backend
 python manage.py startapp api
+####
+
+# OTRA INSTALACIÓN 
 pip install django-cors-headers
+###
 
-##FRONT
-
+## INICIO DE PROYECTO (FRONT)
 npm create vite@latest frontend --template react
 ## >>> ELEGIR >>
 ## React
 ## Typescript
+cd frontend
+npm install
+npm run dev
+
+### INSTALAR REQUERIMIENTO QUE PERMITE UTILIZAR 1 TERMINAL PARA CORRER REACT+DJANGO
+npm install --save-dev npm-run-all
 
