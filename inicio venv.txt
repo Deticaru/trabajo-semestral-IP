@@ -7,7 +7,9 @@ cd scripts
 cd..
 cd..
 pip install django djangorestframework
-#####
+### INSTALACIÓN DE REQUERIMIENTOS
+pip install -r requirements.txt
+##### FIN AMBIENTE VIRTUAL
 
 ## INICIO DE PROYECTO (BACKEND)
 django-admin startproject backend
@@ -15,7 +17,7 @@ cd backend
 python manage.py startapp api
 ####
 
-# OTRA INSTALACIÓN 
+# OTRA INSTALACIÓN (está ya dentro de los requirements)
 pip install django-cors-headers
 ###
 
@@ -28,7 +30,7 @@ cd frontend
 npm install
 npm run dev
 
-### INSTALAR REQUERIMIENTO QUE PERMITE UTILIZAR 1 TERMINAL PARA CORRER REACT+DJANGO
+### INSTALAR REQUERIMIENTO QUE PERMITE UTILIZAR 1 TERMINAL PARA CORRER REACT+DJANGO (ESTÁ DENTRO DEL FRONT)
 npm install --save-dev npm-run-all
 
 ### CREACIÓN DE ADMIN PARA PROCESOS INTERNOS
@@ -36,6 +38,6 @@ python manage.py createsuperuser
 ### nombre:     admin
 ### contraseña: admin
 
-### Instalación Tailwind
+### Instalación Tailwind (ESTÁ DENTRO DEL FRONT)
 cd 
 npm install tailwindcss @tailwindcss/vite
