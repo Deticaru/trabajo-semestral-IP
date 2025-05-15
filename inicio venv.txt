@@ -36,3 +36,6 @@ python manage.py createsuperuser
 ### nombre:     admin
 ### contraseña: admin
 
+### Instalación Tailwind
+cd 
+npm install tailwindcss @tailwindcss/vite
