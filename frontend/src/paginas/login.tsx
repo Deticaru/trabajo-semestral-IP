@@ -34,6 +34,9 @@ const Login: React.FC = () => {
 
     return (
         <div>
+            <div className="bg-blue-500 text-white p-4 rounded-lg">
+                Bienvenido
+            </div>
             <h2>Iniciar Sesión</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleLogin}>
