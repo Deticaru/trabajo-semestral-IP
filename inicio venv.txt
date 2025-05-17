@@ -6,15 +6,14 @@ cd scripts
 ./activate
 cd..
 cd..
-pip install django djangorestframework
 ### INSTALACIÓN DE REQUERIMIENTOS
+npm install --save-dev npm-run-all ##NECESARIO PARA FRONT
 pip install -r requirements.txt
 ##### FIN AMBIENTE VIRTUAL
 
 ### AMBIENTE VIRTUAL 2 (LINUX)
 python3 -m venv env
 source env/bin/activate
-pip install django djangorestframework
 pip install -r requirements.txt
 ##
 
@@ -25,7 +24,7 @@ python manage.py startapp api
 ####
 
 # OTRA INSTALACIÓN (está ya dentro de los requirements)
-pip install django-cors-headers
+
 ###
 
 ## INICIO DE PROYECTO (FRONT)
@@ -46,13 +45,12 @@ python manage.py createsuperuser
 ### contraseña: admin
 
 ### Instalación Tailwind (ESTÁ DENTRO DEL FRONT)
-cd 
 npm install tailwindcss @tailwindcss/vite
 
-### Instalación JWT
+### Instalación requerimiento (YA ESTÁN EN requirements.txt)
+pip install django-cors-headers
 pip install djangorestframework-simplejwt
-
-### Instalación requerimiento
+pip install django djangorestframework
 pip install django-cors-headers
 
 ### Instalación requerimientos (ya está en front)
