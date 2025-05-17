@@ -19,7 +19,7 @@ const Login: React.FC = () => {
             const { access, refresh } = response.data;
             localStorage.setItem('access_token', access);
             localStorage.setItem('refresh_token', refresh)
-            axios.defaults.headers.common['Authorization'] = `Bearer ${access}`; ✅
+            axios.defaults.headers.common['Authorization'] = `Bearer ${access}`;
 
 
             alert('¡Login Exitoso!')
