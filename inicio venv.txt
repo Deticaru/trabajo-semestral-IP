@@ -37,15 +37,11 @@ npm install
 npm run dev
 
 ### INSTALAR REQUERIMIENTO QUE PERMITE UTILIZAR 1 TERMINAL PARA CORRER REACT+DJANGO (ESTÁ DENTRO DEL FRONT)
-npm install --save-dev npm-run-all
 
 ### CREACIÓN DE ADMIN PARA PROCESOS INTERNOS
 python manage.py createsuperuser
 ### nombre:     admin
 ### contraseña: admin
-
-### Instalación Tailwind (ESTÁ DENTRO DEL FRONT)
-npm install tailwindcss @tailwindcss/vite
 
 ### Instalación requerimiento (YA ESTÁN EN requirements.txt)
 pip install django-cors-headers
@@ -57,3 +53,5 @@ pip install django-cors-headers
 npm install react-router-dom
 npm install --save-dev @types/react-router-dom
 npm install axios
+npm install tailwindcss @tailwindcss/vite
+npm install --save-dev npm-run-all
