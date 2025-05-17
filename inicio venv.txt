@@ -51,3 +51,10 @@ npm install tailwindcss @tailwindcss/vite
 
 ### Instalación JWT
 pip install djangorestframework-simplejwt
+
+### Instalación requerimiento
+pip install django-cors-headers
+
+### Instalación requerimientos (ya está en front)
+npm install react-router-dom
+npm install --save-dev @types/react-router-dom
