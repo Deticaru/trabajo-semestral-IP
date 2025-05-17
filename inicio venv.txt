@@ -48,3 +48,6 @@ python manage.py createsuperuser
 ### Instalación Tailwind (ESTÁ DENTRO DEL FRONT)
 cd 
 npm install tailwindcss @tailwindcss/vite
+
+### Instalación JWT
+pip install djangorestframework-simplejwt
