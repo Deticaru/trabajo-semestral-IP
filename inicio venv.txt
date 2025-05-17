@@ -11,6 +11,13 @@ pip install django djangorestframework
 pip install -r requirements.txt
 ##### FIN AMBIENTE VIRTUAL
 
+### AMBIENTE VIRTUAL 2 (LINUX)
+python3 -m venv env
+source env/bin/activate
+pip install django djangorestframework
+pip install -r requirements.txt
+##
+
 ## INICIO DE PROYECTO (BACKEND)
 django-admin startproject backend
 cd backend
