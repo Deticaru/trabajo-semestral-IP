@@ -1,7 +1,12 @@
-import { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './paginas/login';
-import './App.css'
+import { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Login from "./pages/Login";
+import "./App.css";
 
 function Home() {
   const [message, setMessage] = useState<string>('Cargando...');
@@ -25,7 +30,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/Login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
       </Routes>
