@@ -6,15 +6,14 @@ cd scripts
 ./activate
 cd..
 cd..
-pip install django djangorestframework
 ### INSTALACIÓN DE REQUERIMIENTOS
+npm install --save-dev npm-run-all ##NECESARIO PARA FRONT
 pip install -r requirements.txt
 ##### FIN AMBIENTE VIRTUAL
 
 ### AMBIENTE VIRTUAL 2 (LINUX)
 python3 -m venv env
 source env/bin/activate
-pip install django djangorestframework
 pip install -r requirements.txt
 ##
 
@@ -25,7 +24,7 @@ python manage.py startapp api
 ####
 
 # OTRA INSTALACIÓN (está ya dentro de los requirements)
-pip install django-cors-headers
+
 ###
 
 ## INICIO DE PROYECTO (FRONT)
@@ -38,23 +37,21 @@ npm install
 npm run dev
 
 ### INSTALAR REQUERIMIENTO QUE PERMITE UTILIZAR 1 TERMINAL PARA CORRER REACT+DJANGO (ESTÁ DENTRO DEL FRONT)
-npm install --save-dev npm-run-all
 
 ### CREACIÓN DE ADMIN PARA PROCESOS INTERNOS
 python manage.py createsuperuser
 ### nombre:     admin
 ### contraseña: admin
 
-### Instalación Tailwind (ESTÁ DENTRO DEL FRONT)
-cd 
-npm install tailwindcss @tailwindcss/vite
-
-### Instalación JWT
+### Instalación requerimiento (YA ESTÁN EN requirements.txt)
+pip install django-cors-headers
 pip install djangorestframework-simplejwt
-
-### Instalación requerimiento
+pip install django djangorestframework
 pip install django-cors-headers
 
 ### Instalación requerimientos (ya está en front)
 npm install react-router-dom
 npm install --save-dev @types/react-router-dom
+npm install axios
+npm install tailwindcss @tailwindcss/vite
+npm install --save-dev npm-run-all

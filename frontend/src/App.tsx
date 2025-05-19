@@ -1,22 +1,41 @@
-import { useEffect, useState } from 'react'
-import './App.css'
+import { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Login from "./pages/login";
+import "./App.css";
 
-function App() {
-  const [message, setMessage] = useState<string>('Cargando...');
+function Home() {
+  const [message, setMessage] = useState<string>("Cargando...");
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/hello/')
+    fetch("http://localhost:8000/api/hello/")
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
-      .catch(() => setMessage('Error al conectar con la API'));
+      .catch(() => setMessage("Error al conectar con la API"));
   }, []);
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
+    <div style={{ padding: "2rem", fontFamily: "Arial" }}>
       <h1>Mensaje desde Django:</h1>
       <p>{message}</p>
     </div>
   );
 }
 
-export default App
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
