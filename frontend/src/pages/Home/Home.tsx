@@ -1,14 +1,20 @@
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Hero from "../../components/Hero/Hero";
+import { useEffect } from "react";
 
 const Home = () => {
+
+  useEffect(() => {
+    document.title = "Inicio";
+  });
+
   const products = [
     {
       id: 1,
       name: "Martillo profesional",
       description: "Martillo de acero forjado con mango ergonómico.",
-      price: "$15.99",
+      price: "$15.990",
       image:
         "https://images.unsplash.com/photo-1586985289688-ca3cf06d435d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
     },
@@ -16,7 +22,7 @@ const Home = () => {
       id: 2,
       name: "Juego de destornilladores",
       description: "Set de 6 piezas con puntas intercambiables.",
-      price: "$22.50",
+      price: "$22.500",
       image:
         "https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
     },
@@ -24,11 +30,13 @@ const Home = () => {
       id: 3,
       name: "Taladro inalámbrico",
       description: "20V con batería de litio y 15 ajustes de torque.",
-      price: "$89.99",
+      price: "$89.990",
       image:
         "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
     },
   ];
+  
+  
 
   return (
     <>

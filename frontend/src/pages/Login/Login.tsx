@@ -34,6 +34,7 @@ const Login: React.FC = () => {
     if (token) {
       // Opcional: podrías verificar si el token es válido con el backend
       navigate("/Home");
+      document.title = "Inicio";
     } else {
       setLoading(false); // solo mostramos login si no está logueado
     }
@@ -76,6 +77,8 @@ const Login: React.FC = () => {
       setError("Correo o contraseña incorrectos");
     }
   };
+
+  if (loading) return <div className="loading">Cargando...</div>;
 
   return (
     
