@@ -1,22 +1,42 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"
 import axios from "axios";
 import styled from 'styled-components';
-import LogoLogin from "../assets/images/login-banner-2000-slim-v3.png"
-import LoginBackground from "../assets/images/login-background.jpg"
+import LogoLogin from "../../assets/images/login-banner-2000-slim-v3.png"
+import LoginBackground from "../../assets/images/login-background.jpg"
+import "./Login.css"
 
 const Login: React.FC = () => {
   const [correo_usuario, setCorreo] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true); 
+  const navigate = useNavigate();
+  
   // FONDO
   useEffect(() => {
+    
     document.title = "Iniciar Sesión";
+    document.body.classList.add("login-page");
+    
+    const root = document.getElementById("root");
+    if (root) {
+      root.classList.add("login-root");
+    }
 
     // Set body background when this component is mounted
     document.body.style.backgroundImage = `url(${LoginBackground})`;
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundPosition = "center";
     document.body.style.backgroundRepeat = "no-repeat";
+
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      // Opcional: podrías verificar si el token es válido con el backend
+      navigate("/Home");
+    } else {
+      setLoading(false); // solo mostramos login si no está logueado
+    }
 
     return () => {
       // Reset when component unmounts (important!)
@@ -27,11 +47,9 @@ const Login: React.FC = () => {
     };
   }, []);
 
-
-
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    
     try {
       // CAMBIAR DESPUÉS
       const response = await axios.post("http://127.0.0.1:8000/api/token/", {
@@ -45,6 +63,12 @@ const Login: React.FC = () => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${access}`;
 
       alert("¡Login Exitoso!");
+      navigate("/Home");
+      const root = document.getElementById("root");
+      document.body.classList.remove("login-page");
+      if (root) {
+        root.classList.remove("login-root");
+      }
     } catch (err) {
       console.error(err);
       setError("Correo o contraseña incorrectos");
@@ -149,7 +173,7 @@ const StyledWrapper = styled.div`
     border-radius: 0.375rem;
     border: 1px solid rgba(55, 65, 81, 1);
     outline: 0;
-    background-color: #111827;
+    background-color: hsl(221, 39.30%, 11.00%);
     padding: 0.75rem 1rem;
     color: rgba(243, 244, 246, 1);
   }
@@ -174,7 +198,7 @@ const StyledWrapper = styled.div`
   }
 
   .forgot a:hover, .signup a:hover {
-    text-decoration: underline rgba(167, 139, 250, 1);
+    text-decoration: underline rgb(0, 0, 0);
   }
 
   .sign {
@@ -187,6 +211,10 @@ const StyledWrapper = styled.div`
     border: none;
     border-radius: 0.375rem;
     font-weight: 600;
+  }
+
+  .sign:hover {
+    background-color:#5f0e17;
   }
 
   .social-message {
