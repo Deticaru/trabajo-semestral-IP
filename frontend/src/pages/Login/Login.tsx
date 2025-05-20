@@ -39,6 +39,8 @@ const Login: React.FC = () => {
     }
 
     return () => {
+      document.body.classList.remove("login-page");
+      if (root) root.classList.remove("login-root");
       // Reset when component unmounts (important!)
       document.body.style.backgroundImage = "";
       document.body.style.backgroundSize = "";
