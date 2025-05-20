@@ -12,7 +12,9 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true); 
   const navigate = useNavigate();
-  
+  // el error aquí es para quitar un mensaje de alerta de vscode, pero si es necesario la const 'error'
+  error;
+
   // FONDO
   useEffect(() => {
     
