@@ -1,12 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from 'styled-components';
-import LogoLogin from "../assets/images/login-banner.jpg"
+import LogoLogin from "../assets/images/login-banner-2000-slim-v3.png"
+import LoginBackground from "../assets/images/login-background.jpg"
 
 const Login: React.FC = () => {
   const [correo_usuario, setCorreo] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
+  // FONDO
+  useEffect(() => {
+    document.title = "Iniciar Sesión";
+
+    // Set body background when this component is mounted
+    document.body.style.backgroundImage = `url(${LoginBackground})`;
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundRepeat = "no-repeat";
+
+    return () => {
+      // Reset when component unmounts (important!)
+      document.body.style.backgroundImage = "";
+      document.body.style.backgroundSize = "";
+      document.body.style.backgroundPosition = "";
+      document.body.style.backgroundRepeat = "";
+    };
+  }, []);
+
+
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,7 +92,7 @@ const Login: React.FC = () => {
               <a rel="noopener noreferrer" href="#" > Registrarse</a>
             </p>
           </div>
-          <div className="col-span-1 logo-login" >
+          <div className="col-span-1" >
             <img src={LogoLogin} alt="" />
           </div>
         </div>
@@ -81,9 +102,6 @@ const Login: React.FC = () => {
   
 };
 const StyledWrapper = styled.div`
-  .logo-login {
-    background-image: url(${LogoLogin})
-  }
 
   .form-container2 {
     width: 1040px;
