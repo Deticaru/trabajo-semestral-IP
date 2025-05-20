@@ -149,7 +149,7 @@ const StyledWrapper = styled.div`
     border-radius: 0.375rem;
     border: 1px solid rgba(55, 65, 81, 1);
     outline: 0;
-    background-color: rgba(17, 24, 39, 1);
+    background-color: #111827;
     padding: 0.75rem 1rem;
     color: rgba(243, 244, 246, 1);
   }
