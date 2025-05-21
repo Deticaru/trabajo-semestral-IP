@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useCart } from "../../context/CartContext"; // <-- Agrega este import
 
 const Navbar = () => {
   const linkStyle = "px-3 py-2 rounded-md text-sm font-medium";
@@ -10,6 +11,10 @@ const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+
+  // Obtén el carrito y la animación del contexto
+  const { cart, animateCart } = useCart();
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -103,7 +108,7 @@ const Navbar = () => {
               Iniciar Sesión
             </NavLink>
           )}
-          {/* Botón de carrito al final */}
+          {/* Botón de carrito al final con badge animado */}
           <NavLink
             to="/cart"
             className={({ isActive }) =>
@@ -113,22 +118,32 @@ const Navbar = () => {
             }
             aria-label="Ver carrito"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              width="26"
-              height="26"
-              xmlns="http://www.w3.org/2000/svg"
-              className="inline"
-            >
-              <path
-                d="M7.2998 5H22L20 12H8.37675M21 16H9L7 3H4M4 8H2M5 11H2M6 14H2M10 20C10 20.5523 9.55228 21 9 21C8.44772 21 8 20.5523 8 20C8 19.4477 8.44772 19 9 19C9.55228 19 10 19.4477 10 20ZM21 20C21 20.5523 20.5523 21 20 21C19.4477 21 19 20.5523 19 20C19 19.4477 19.4477 19 20 19C20.5523 19 21 19.4477 21 20Z"
-                stroke="#fff"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <div className="relative">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                width="26"
+                height="26"
+                xmlns="http://www.w3.org/2000/svg"
+                className="inline"
+              >
+                <path
+                  d="M7.2998 5H22L20 12H8.37675M21 16H9L7 3H4M4 8H2M5 11H2M6 14H2M10 20C10 20.5523 9.55228 21 9 21C8.44772 21 8 20.5523 8 20C8 19.4477 8.44772 19 9 19C9.55228 19 10 19.4477 10 20ZM21 20C21 20.5523 20.5523 21 20 21C19.4477 21 19 20.5523 19 20C19 19.4477 19.4477 19 20 19C20.5523 19 21 19.4477 21 20Z"
+                  stroke="#fff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {cartCount > 0 && (
+                <span
+                  className={`absolute -top-2 -right-2 bg-yellow-400 text-red-800 text-xs font-bold rounded-full px-2 py-0.5 border-2 border-white
+                    ${animateCart ? "animate-bounce" : ""}`}
+                >
+                  {cartCount}
+                </span>
+              )}
+            </div>
           </NavLink>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 
 type CardProps = {
   id: string;
@@ -28,8 +29,16 @@ const Card: React.FC<CardProps> = ({
     setQuantity((q) => q + 1);
   };
 
+  const { addToCart } = useCart();
+
   const handleAddToCart = () => {
-    alert(`Agregado ${quantity} producto(s) al carrito`);
+    addToCart({
+      id,
+      title,
+      image,
+      price: Number(price),
+      quantity,
+    });
   };
 
   const goToProduct = () => {

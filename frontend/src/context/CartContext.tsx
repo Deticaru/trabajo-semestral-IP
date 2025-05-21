@@ -12,6 +12,7 @@ type CartContextType = {
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  animateCart: boolean;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -24,6 +25,7 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItemType[]>([]);
+  const [animateCart, setAnimateCart] = useState(false);
 
   const addToCart = (item: CartItemType) => {
     setCart((prev) => {
@@ -35,6 +37,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
       return [...prev, item];
     });
+    setAnimateCart(true);
+    setTimeout(() => setAnimateCart(false), 500); // Duración de la animación
   };
 
   const removeFromCart = (id: string) => {
@@ -53,7 +57,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        animateCart,
+      }}
     >
       {children}
     </CartContext.Provider>

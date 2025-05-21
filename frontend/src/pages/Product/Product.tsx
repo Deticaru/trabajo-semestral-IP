@@ -4,11 +4,14 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import styled from "styled-components";
 import { products } from "../../data/products";
+import { useCart } from "../../context/CartContext";
 
 const Product = () => {
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<any>(null);
+
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const found = products.find((p) => p.id === id);
@@ -45,7 +48,18 @@ const Product = () => {
                   +
                 </CounterButton>
               </Counter>
-              <AddButton aria-label="Agregar al carrito">
+              <AddButton
+                aria-label="Agregar al carrito"
+                onClick={() =>
+                  addToCart({
+                    id: product.id,
+                    title: product.title,
+                    image: product.image,
+                    price: product.price,
+                    quantity,
+                  })
+                }
+              >
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
