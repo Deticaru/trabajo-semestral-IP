@@ -141,13 +141,13 @@ const Login: React.FC = () => {
                 {/* CORREO */}
                 <div className="input-group">
                   <label htmlFor="username">Correo</label>
-                  <input type="email" name="username" id="username" placeholder="Ingresa tu correo..." value={correo_usuario} onChange={(e) => setCorreo(e.target.value)} required/>
+                  <input maxLength={30} type="email" name="username" id="username" placeholder="Ingresa tu correo..." value={correo_usuario} onChange={(e) => setCorreo(e.target.value)} required/>
                 </div>
                 {/* CORREO FIN */}
                 {/* CONTRASEÑA */}
                 <div className="input-group">
                   <label htmlFor="password">Password</label>
-                  <input type="password" name="password" id="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+                  <input maxLength={25} type="password" name="password" id="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required/>
                   <div className="forgot">
                     <a onClick={Logging}  rel="noopener noreferrer" href="#">¿Olvidaste tu contraseña?</a>
                   </div>
@@ -173,33 +173,50 @@ const Login: React.FC = () => {
           <div className={`grid grid-cols-2 gap-3 form-container3 ${!isLoggingIn ? (registerVisible ? 'fade-in' : 'fade-out') : 'hidden-initial'}`}>
             
             <div className="col-span-2">
-              <p className="title">Registración</p>
+              <p className="title">Registrarse</p>
 
               {/* FORM */}
               <form className="form" onSubmit={handleLogin}>
                 {/* NOMBRE */}
                 <div className="input-group">
-                  <label htmlFor="nombrecom">Nombre Completo</label>
-                  <input type="text" name="nombrecom" id="nombrecom" placeholder="Ingresa tu nombre completo..." value={nombre_usuario} onChange={(e) => setNombre(e.target.value)} required/>
+                  <label htmlFor="nombrecom">Nombre</label>
+                  <input maxLength={30} type="text" name="nombrecom" id="nombrecom" placeholder="Ingresa tu nombre completo..." value={nombre_usuario} onChange={(e) => setNombre(e.target.value)} required/>
                 </div>
                 {/* NOMBRE FIN */}
+                <br />
                 {/* CORREO */}
                 <div className="input-group">
                   <label htmlFor="username">Correo</label>
-                  <input type="email" name="username" id="username" placeholder="Ingresa tu correo..." value={correo_usuario} onChange={(e) => setCorreo(e.target.value)} required/>
+                  <input maxLength={30} type="email" name="username" id="username" placeholder="Ingresa tu correo..." value={correo_usuario} onChange={(e) => setCorreo(e.target.value)} required/>
                 </div>
                 {/* CORREO FIN */}
+                <br />
                 {/* CONTRASEÑA */}
                 <div className="input-group">
                   <label htmlFor="password">Password</label>
-                  <input type="password" name="password" id="password" placeholder="Ingresa su contraseña..." value={password} onChange={(e) => setPassword(e.target.value)} required/>
+                  <input maxLength={25} type="password" name="password" id="password" placeholder="Ingresa su contraseña..." value={password} onChange={(e) => setPassword(e.target.value)} required/>
                 </div>
                 {/* CONTRASEÑA FIN */}
+                <br />
                 {/* TELÉFONO */}
                 <div className="input-group">
                   <label htmlFor="telefono" className="telefono" >Teléfono</label>
-                  <input type="text" className="no-arrows" name="telefono" id="telefono" placeholder="Ingresa tu número telefónico..." value={inputValue} onChange={handleTelefono} required/>
+                  <input maxLength={12} type="text" className="no-arrows" name="telefono" id="telefono" placeholder="Ingresa tu número telefónico..." value={inputValue} onChange={handleTelefono} required/>
                 </div>
+                {/* TELÉFONO FIN */}
+                <br />
+                {/* QUIERE FEED */}
+                <div className="input-group input-group-checkbox grid grid-cols-4 items-center gap-2">
+                  <label htmlFor="feed" className="col-span-3 flex items-center justify-center text-center feed">
+                    ¿Quieres recibir noticias y promociones?
+                  </label>
+                  <label className="switch">
+                    <input type="checkbox" id="feed"/>
+                    <span className="slider" />
+                  </label>
+                </div>
+                {/* QUIERE FEED FIN */}
+                <br /><br /><br />
                 <button type="submit" className="sign">Registrarse</button>
               </form>
               {/* FORM FIN */}
@@ -217,6 +234,59 @@ const Login: React.FC = () => {
   
 };
 const StyledWrapper = styled.div`
+
+  .switch {
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+    width: 3.5em;
+    height: 2em;
+  }
+
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    border: 2px solid #414141;
+    border-radius: 50px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 1.4em;
+    width: 1.4em;
+    left: 0.2em;
+    bottom: 0.2em;
+    background-color: white;
+    border-radius: inherit;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+  }
+
+  .switch input:checked + .slider {
+    box-shadow: 0 0 20px rgba(9, 117, 241, 0.8);
+    border: 2px solid #0974f1;
+  }
+
+  .switch input:checked + .slider:before {
+    transform: translateX(1.5em);
+  }
+    
+  .input-group-checkbox {
+    gap: 10px;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    }
 
   .fade-in {
     opacity: 1;
@@ -274,6 +344,15 @@ const StyledWrapper = styled.div`
     text-align: start;
     color: rgba(156, 163, 175, 1);
     margin-bottom: 5px;
+  }
+
+  .feed {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 0;
+    width: 100%;
   }
 
   .input-group input {
