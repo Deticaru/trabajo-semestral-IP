@@ -11,6 +11,8 @@ import Contact from "./pages/Contact/Contact";
 import Catalog from "./pages/Catalog/Catalog";
 import Product from "./pages/Product/Product";
 import Cart from "./pages/Cart/Cart";
+import BackToTop from "./components/BackToTop/BackToTop";
+import Profile from "./pages/Profile/Profile";
 import "./App.css";
 
 function App() {
@@ -25,8 +27,10 @@ function App() {
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>
+      <BackToTop />
     </CartProvider>
   );
 }
