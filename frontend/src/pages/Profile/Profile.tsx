@@ -289,7 +289,7 @@ const StyledWrapper = styled.div`
   }
   .edit-button::before {
     display: none;
-    content: "Edit";
+    content: "Editar";
     color: white;
     transition-duration: 0.3s;
     font-size: 2px;
