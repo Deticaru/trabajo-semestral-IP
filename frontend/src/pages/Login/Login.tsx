@@ -12,7 +12,6 @@ const Login: React.FC = () => {
   const [correo_usuario, setCorreo] = useState<string>("");
   const [nombre_usuario, setNombre] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [telefono, setTelefono] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true); 
   const navigate = useNavigate();
