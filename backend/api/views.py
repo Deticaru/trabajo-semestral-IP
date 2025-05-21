@@ -3,8 +3,9 @@ from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from .models import Usuario, Tipo_usuario
 from django.contrib.auth.hashers import make_password
 import json
@@ -51,4 +52,38 @@ def registrar_usuario(request):
         return Response({'success': True, 'msg': 'Usuario creado correctamente'}, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def profile(request):
+    user = request.user
+
+    if request.method == 'GET':
+        return Response({
+            'nom_usuario': user.nom_usuario,
+            'correo_usuario': user.correo_usuario,
+            'telefono_usuario': user.telefono_usuario,
+            'direccion': getattr(user, 'dir_usuario', ''),  # Mapear correctamente el campo dirección
+        })
+
+    if request.method == 'PUT':
+        data = request.data
+        updated = False
+        if 'nom_usuario' in data and data['nom_usuario'] != user.nom_usuario:
+            user.nom_usuario = data['nom_usuario']
+            updated = True
+        if 'telefono_usuario' in data and data['telefono_usuario'] != user.telefono_usuario:
+            user.telefono_usuario = data['telefono_usuario']
+            updated = True
+        if 'direccion' in data and data['direccion'] != getattr(user, 'dir_usuario', ''):
+            user.dir_usuario = data['direccion']
+            updated = True
+        if 'password' in data and data['password']:
+            user.set_password(data['password'])
+            updated = True
+        if updated:
+            user.save()
+            return Response({'success': True, 'msg': 'Datos actualizados correctamente'})
+        else:
+            return Response({'success': False, 'msg': 'No hay cambios para actualizar'}, status=status.HTTP_200_OK)
 # Create your views here.
