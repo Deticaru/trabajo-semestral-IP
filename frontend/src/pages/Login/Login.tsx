@@ -163,15 +163,17 @@ const Login: React.FC = () => {
                   <input maxLength={30} type="email" name="username" id="username" placeholder="Ingresa tu correo..." value={correo_usuario} onChange={(e) => setCorreo(e.target.value)} required/>
                 </div>
                 {/* CORREO FIN */}
+                <br />
                 {/* CONTRASEÑA */}
                 <div className="input-group">
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password">Contraseña</label>
                   <input maxLength={25} type="password" name="password" id="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required/>
                   <div className="forgot">
                     <a onClick={Logging}  rel="noopener noreferrer" href="#">¿Olvidaste tu contraseña?</a>
                   </div>
                 </div>
                 {/* CONTRASEÑA FIN */}
+                <br />
                 <button type="submit" className="sign">Iniciar Sesión</button>
               </form>
               {/* FORM */}
