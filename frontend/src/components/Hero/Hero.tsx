@@ -25,13 +25,13 @@ const Hero = () => {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <Link
-              to="/servicios"
+              to="/catalog"
               className="inline-block px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-700 hover:bg-red-800 md:py-4 md:text-lg md:px-10 transition-colors"
             >
               Ver productos
             </Link>
             <Link
-              to="/contacto"
+              to="/contact"
               className="inline-block px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 md:py-4 md:text-lg md:px-10 transition-colors"
             >
               Contactar

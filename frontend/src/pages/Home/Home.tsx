@@ -2,49 +2,24 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Hero from "../../components/Hero/Hero";
 import { useEffect } from "react";
+import { products } from "../../data/products";
 
 const Home = () => {
-
   useEffect(() => {
     document.title = "Inicio";
-  });
+  }, []);
 
-  const products = [
-    {
-      id: 1,
-      name: "Martillo profesional",
-      description: "Martillo de acero forjado con mango ergonómico.",
-      price: "$15.990",
-      image:
-        "https://images.unsplash.com/photo-1586985289688-ca3cf06d435d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
-    },
-    {
-      id: 2,
-      name: "Juego de destornilladores",
-      description: "Set de 6 piezas con puntas intercambiables.",
-      price: "$22.500",
-      image:
-        "https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
-    },
-    {
-      id: 3,
-      name: "Taladro inalámbrico",
-      description: "20V con batería de litio y 15 ajustes de torque.",
-      price: "$89.990",
-      image:
-        "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
-    },
-  ];
-  
-  
+  // Selecciona los primeros 3 productos como destacados
+  const featuredProducts = products.slice(0, 3);
 
   return (
     <>
       <Navbar />
       <main className="min-h-screen bg-gray-100">
-        {/* Nuevo componente Hero */}
         <Hero />
-
+        <div className="bg-gradient-to-r from-red-700 to-yellow-400 text-white py-4 px-6 rounded-lg shadow mb-8 text-center font-semibold text-lg">
+          ¡Envío gratis por compras sobre $50.000! 🚚✨
+        </div>
         {/* Productos destacados */}
         <section className="py-16 px-4 max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -57,26 +32,26 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product) => (
+            {featuredProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 group"
+                className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg"
               >
-                <div className="aspect-w-3 aspect-h-2">
+                <div className="w-full h-64 flex items-center justify-center bg-gray-100">
                   <img
                     src={product.image}
-                    alt={product.name}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                    alt={product.title}
+                    className="max-h-60 object-contain"
                   />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {product.name}
+                    {product.title}
                   </h3>
                   <p className="text-gray-600 mb-4">{product.description}</p>
                   <div className="flex items-center justify-between">
                     <p className="text-lg font-bold text-red-700">
-                      {product.price}
+                      ${product.price.toLocaleString()}
                     </p>
                     <button className="bg-red-100 hover:bg-red-200 text-red-800 font-medium py-2 px-4 rounded-md transition-colors duration-200">
                       Añadir al carrito
@@ -89,14 +64,70 @@ const Home = () => {
 
           <div className="mt-12 text-center">
             <a
-              href="/servicios"
+              href="/catalog"
               className="inline-block px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-800 hover:bg-gray-900 transition-colors"
             >
               Ver todos los productos
             </a>
           </div>
         </section>
-
+        <section className="py-8">
+          <div className="max-w-5xl mx-auto flex items-center justify-center gap-8 overflow-x-auto">
+            <img
+              src="https://vgcibiza.com/templates/yootheme/cache/2a/bosch-2a28d282.jpeg"
+              alt="Bosch"
+              className="h-12 grayscale hover:grayscale-0 transition"
+            />
+            <img
+              src="https://cdn.worldvectorlogo.com/logos/makita-logo-1.svg"
+              alt="Makita"
+              className="h-12 grayscale hover:grayscale-0 transition"
+            />
+            <img
+              src="https://http2.mlstatic.com/D_NQ_NP_707545-MLA74838866244_032024-F.jpg"
+              alt="DeWalt"
+              className="h-12 grayscale hover:grayscale-0 transition"
+            />
+            <img
+              src="https://www.brandemia.org/wp-content/uploads/2013/06/stanley_logo_principal.jpg"
+              alt="Stanley"
+              className="h-12 grayscale hover:grayscale-0 transition"
+            />
+            {/* Agrega más marcas si quieres */}
+          </div>
+        </section>
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl font-bold mb-8 text-gray-900">
+              Nuestros clientes opinan
+            </h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="bg-white p-6 rounded-lg shadow">
+                <p className="text-gray-700 italic">
+                  "Excelente atención y productos de calidad. ¡Volveré a
+                  comprar!"
+                </p>
+                <div className="mt-4 font-semibold text-red-700">
+                  - Camila R.
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow">
+                <p className="text-gray-700 italic">
+                  "El envío fue rapidísimo y el taladro funciona perfecto."
+                </p>
+                <div className="mt-4 font-semibold text-red-700">- Juan P.</div>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow">
+                <p className="text-gray-700 italic">
+                  "Muy recomendable, encontré todo lo que necesitaba."
+                </p>
+                <div className="mt-4 font-semibold text-red-700">
+                  - Fernanda S.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
         {/* Sección de características */}
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -186,6 +217,40 @@ const Home = () => {
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+        <section className="py-16 bg-white">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold mb-8 text-gray-900 text-center">
+              Preguntas Frecuentes
+            </h2>
+            <div className="space-y-4">
+              <details className="border rounded-lg p-4">
+                <summary className="font-semibold cursor-pointer">
+                  ¿Cuánto demora el envío?
+                </summary>
+                <p className="mt-2 text-gray-600">
+                  El envío demora entre 24 y 48 horas hábiles en todo Chile.
+                </p>
+              </details>
+              <details className="border rounded-lg p-4">
+                <summary className="font-semibold cursor-pointer">
+                  ¿Puedo pagar en cuotas?
+                </summary>
+                <p className="mt-2 text-gray-600">
+                  Sí, aceptamos pagos en cuotas con tarjetas de crédito.
+                </p>
+              </details>
+              <details className="border rounded-lg p-4">
+                <summary className="font-semibold cursor-pointer">
+                  ¿Tienen garantía los productos?
+                </summary>
+                <p className="mt-2 text-gray-600">
+                  Todos nuestros productos cuentan con garantía de 6 meses
+                  mínimo.
+                </p>
+              </details>
             </div>
           </div>
         </section>
