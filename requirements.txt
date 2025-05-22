@@ -16,3 +16,4 @@ transbank-sdk==6.0.0
 typing_extensions==4.13.2
 tzdata==2025.2
 urllib3==2.4.0
+drf-yasg==1.21.7

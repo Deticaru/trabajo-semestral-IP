@@ -49,6 +49,7 @@ pip install djangorestframework-simplejwt
 pip install django djangorestframework
 pip install django-cors-headers
 pip install transbank-sdk
+pip install drf-yasg
 
 ### Instalación requerimientos (ya está en front)
 npm install react-router-dom
@@ -57,3 +58,7 @@ npm install axios
 npm install tailwindcss @tailwindcss/vite
 npm install --save-dev npm-run-all
 npm install styled-components
+
+#Api documentada
+http://localhost:8000/swagger/
+http://localhost:8000/redoc/
