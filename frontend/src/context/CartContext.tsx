@@ -24,8 +24,17 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cart, setCart] = useState<CartItemType[]>([]);
+  // Load cart from localStorage on mount
+  const [cart, setCart] = useState<CartItemType[]>(() => {
+    const stored = localStorage.getItem("cart");
+    return stored ? JSON.parse(stored) : [];
+  });
   const [animateCart, setAnimateCart] = useState(false);
+
+  // Save cart to localStorage whenever it changes
+  React.useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   const addToCart = (item: CartItemType) => {
     setCart((prev) => {

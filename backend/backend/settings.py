@@ -61,6 +61,10 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True #SÓLO PARA DESARROLLO
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Cambia el puerto si tu frontend usa otro
+]
 
 #CORS_ALLOWED_ORIGINS = [
     #"http://localhost:3000",

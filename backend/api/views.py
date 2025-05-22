@@ -5,15 +5,17 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from .models import Usuario, Tipo_usuario
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from .models import EstadoPedido, Usuario, Tipo_usuario
 from django.contrib.auth.hashers import make_password
 from rest_framework import viewsets, generics
 from .models import Producto, Categoria, Marca, ImagenProducto, Sucursal, StockSucursal, Pedido, DetalleProducto, Contacto
 from .serializers import *
-from rest_framework import status
 import json
 from .webpay_config import get_webpay_transaction
+from transbank.error.transbank_error import TransbankError
+from transbank.webpay.webpay_plus.transaction import Transaction
+from django.utils import timezone
 
 tx = get_webpay_transaction()
 
@@ -70,7 +72,7 @@ def profile(request):
             'nom_usuario': user.nom_usuario,
             'correo_usuario': user.correo_usuario,
             'telefono_usuario': user.telefono_usuario,
-            'direccion': getattr(user, 'dir_usuario', ''),  # Mapear correctamente el campo dirección
+            'direccion': getattr(user, 'dir_usuario', ''),
         })
 
     if request.method == 'PUT':
@@ -107,16 +109,50 @@ def webpay_create_transaction(request):
     return Response({'url': resp['url'], 'token': resp['token']})
 
 @api_view(['POST'])
-def webpay_commit_transaction(request):
-    token = request.data.get('token_ws')
-    tx = get_webpay_transaction()
-    resp = tx.commit(token)
-    return Response(resp)
-# Create your views here.
-# Crear funciones o clases para cada endpoint
+@permission_classes([AllowAny])
+def webpay_commit(request):
+    token_ws = request.data.get('token_ws')
+    if not token_ws:
+        return Response({'error': 'No se recibió token_ws'}, status=400)
 
-# Los siguientes metodos son mas flexibles pero no tines control de los endpoints
-# Permite usar post, put, delete, get de una sola vez
+    tx = get_webpay_transaction()
+    try:
+        resp = tx.commit(token_ws)
+        buy_order = resp['buy_order']
+        status = resp['status']
+        # ... extrae el pedido_id como antes ...
+        def extraer_id_de_buy_order(buy_order):
+            try:
+                return int(buy_order.split('-')[1])
+            except Exception:
+                return None
+
+        pedido_id = extraer_id_de_buy_order(buy_order)
+        if not pedido_id:
+            return Response({'error': 'No se pudo extraer el id del pedido'}, status=400)
+        try:
+            pedido = Pedido.objects.get(id=pedido_id)
+        except Pedido.DoesNotExist:
+            return Response({'error': 'Pedido no encontrado'}, status=404)
+        if status == 'AUTHORIZED':
+            estado_pagado = EstadoPedido.objects.get(nombre_estado_pedido='Aprobado')
+            pedido.estado_pedido = estado_pagado
+        else:
+            estado_cancelado = EstadoPedido.objects.get(nombre_estado_pedido='Cancelado')
+            pedido.estado_pedido = estado_cancelado
+        pedido.save()
+        return Response({
+            'success': True,
+            'pedido_id': pedido.id,
+            'nuevo_estado': pedido.estado_pedido.nombre_estado_pedido,
+            'buy_order': buy_order,
+            'status': status,
+            # ...otros datos de resp si quieres mostrarlos...
+        })
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+# ViewSets
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
@@ -161,13 +197,12 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
 
-#Estos metodos son mas especificos y debes operarlos manualmente
+# Métodos específicos
 @api_view(['GET'])
 def productos_list(request):
     productos = Producto.objects.all()
     serializer = ProductoSerializer(productos, many=True)
     return Response(serializer.data)
-    #return Response({"message": "Listado de productos"})
 
 @api_view(['GET'])
 def producto_detalle(request, codigo):
@@ -177,21 +212,18 @@ def producto_detalle(request, codigo):
         return Response(serializer.data)
     except Producto.DoesNotExist:
         return Response({'error': 'Producto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-    #return Response({"message": f"Detalle de producto {codigo}"})
 
 @api_view(['GET'])
 def categorias_list(request):
     categorias = Categoria.objects.all()
     serializer = CategoriaSerializer(categorias, many=True)
     return Response(serializer.data)
-    #return Response({"message": "Lista de categorías"})
 
 @api_view(['GET'])
 def sucursal_stock(request, codigo):
     stock = StockSucursal.objects.filter(sucursal_id=codigo)
     serializer = StockSucursalSerializer(stock, many=True)
     return Response(serializer.data)
-    #return Response({"message": f"Stock por sucursal {id}"})
 
 @api_view(['POST'])
 def realizar_pedido(request):
@@ -200,7 +232,6 @@ def realizar_pedido(request):
          serializer.save()
          return Response(serializer.data, status=201)
      return Response(serializer.errors, status=400)
-    #return Response({"message": "Pedido realizado"})
 
 @api_view(['POST'])
 def contacto(request):
@@ -209,9 +240,41 @@ def contacto(request):
          serializer.save()
          return Response(serializer.data, status=201)
      return Response(serializer.errors, status=400)
-    #return Response({"message": "Mensaje de contacto recibido"})
 
 @api_view(['GET'])
 def moneda_convertir(request):
     # Aquí deberías consumir la API del Banco Central y retornar la conversión
     return Response({"message": "Conversión de moneda"})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def guardar_carrito(request):
+    data = request.data
+    cart = data.get('cart', [])
+    if not cart:
+        return Response({'error': 'El carrito está vacío'}, status=400)
+    try:
+        estado_pendiente = EstadoPedido.objects.get(nombre_estado_pedido='Pago pendiente')
+        pedido = Pedido.objects.create(
+            usuario=request.user,
+            estado_pedido=estado_pendiente,
+            fecha_pedido=timezone.now().date(),
+            total_pedido=sum(item.get('price', 0) * item.get('quantity', 0) for item in cart)
+        )
+        for item in cart:
+            producto_id = item.get('id')
+            cantidad = item.get('quantity')
+            try:
+                producto = Producto.objects.get(id=producto_id)
+            except Producto.DoesNotExist:
+                return Response({'error': f'Producto con id {producto_id} no existe'}, status=400)
+            DetalleProducto.objects.create(
+                pedido=pedido,
+                producto=producto,  # Usa la instancia, no el id
+                cantidad_productos=cantidad,
+                subtotal_producto=item.get('price', 0) * cantidad
+            )
+        return Response({'pedido_id': pedido.id, 'status': 'Carrito guardado'})
+    except Exception as e:
+        print("ERROR EN GUARDAR_CARRITO:", e)
+        return Response({'error': str(e)}, status=500)
