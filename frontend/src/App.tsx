@@ -23,7 +23,6 @@ import AccountantDashboard from "./pages/Accountant/AccountantDashboard";
 import AccountantPayments from "./pages/Accountant/AccountantPayments";
 import AccountantReports from "./pages/Accountant/AccountantReports";
 import AdminDashboard from "./pages/Administrator/AdminDashboard";
-import AdminUsers from "./pages/Administrator/AdminUsers";
 import AdminPromotions from "./pages/Administrator/AdminPromotions";
 import AdminActivity from "./pages/Administrator/AdminActivity";
 import AdminProducts from "./pages/Administrator/AdminProducts";
@@ -58,7 +57,6 @@ function App() {
           <Route path="/accountant/payments" element={<AccountantPayments />} />
           <Route path="/accountant/reports" element={<AccountantReports />} />
           <Route path="/administrator" element={<AdminDashboard />} />
-          <Route path="/administrator/users" element={<AdminUsers />} />
           <Route
             path="/administrator/promotions"
             element={<AdminPromotions />}

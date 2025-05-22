@@ -1,35 +1,92 @@
 import React from "react";
 import styled from "styled-components";
 
-const FilterSidebar = () => (
+const FilterSidebar = ({
+  categories,
+  filters,
+  onFilterChange,
+  onSearch,
+}: {
+  categories: any[];
+  filters: any;
+  onFilterChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
+  onSearch: (e: React.FormEvent) => void;
+}) => (
   <Sidebar>
     <h3>Filtrar</h3>
-    <div>
-      <strong>Categorías</strong>
-      <ul>
-        <li>
-          <input type="checkbox" /> Herramientas
-        </li>
-        <li>
-          <input type="checkbox" /> Materiales
-        </li>
-        <li>
-          <input type="checkbox" /> Eléctrico
-        </li>
-      </ul>
-    </div>
-    <div>
-      <strong>Precio</strong>
+    <form onSubmit={onSearch}>
       <div>
-        <input type="number" placeholder="Mín" style={{ width: "60px" }} /> -
+        <strong>Buscar producto</strong>
         <input
-          type="number"
-          placeholder="Máx"
-          style={{ width: "60px", marginLeft: "8px" }}
+          type="text"
+          name="search"
+          placeholder="Nombre del producto"
+          value={filters.search}
+          onChange={onFilterChange}
+          style={{ width: "100%", marginBottom: "1rem" }}
+        />
+        <button type="submit" style={{ width: "100%", marginBottom: "1rem" }}>
+          Buscar
+        </button>
+      </div>
+      <div>
+        <strong>Categorías</strong>
+        <ul>
+          {categories.map((cat) => (
+            <li key={cat.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  name="categories"
+                  value={cat.id}
+                  checked={
+                    Array.isArray(filters.categories) &&
+                    filters.categories.includes(Number(cat.id))
+                  }
+                  onChange={onFilterChange}
+                />{" "}
+                {cat.nom_categoria}
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <strong>Precio</strong>
+        <div>
+          <input
+            type="number"
+            name="minPrice"
+            placeholder="Mín"
+            value={filters.minPrice}
+            onChange={onFilterChange}
+            style={{ width: "60px" }}
+          />{" "}
+          -{" "}
+          <input
+            type="number"
+            name="maxPrice"
+            placeholder="Máx"
+            value={filters.maxPrice}
+            onChange={onFilterChange}
+            style={{ width: "60px", marginLeft: "8px" }}
+          />
+        </div>
+      </div>
+      <div>
+        <strong>Marca</strong>
+        <input
+          type="text"
+          name="marca"
+          placeholder="Marca"
+          value={filters.marca}
+          onChange={onFilterChange}
+          style={{ width: "100%", marginBottom: "1rem" }}
         />
       </div>
-    </div>
-    {/* Agrega más filtros aquí */}
+    </form>
   </Sidebar>
 );
 

@@ -37,12 +37,6 @@ const AdminDashboard = () => (
         </div>
         <div className="flex gap-4">
           <NavLink
-            to="/administrator/users"
-            className="bg-yellow-400 text-purple-900 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition"
-          >
-            Gestionar Usuarios
-          </NavLink>
-          <NavLink
             to="/administrator/promotions"
             className="bg-green-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-800 transition"
           >

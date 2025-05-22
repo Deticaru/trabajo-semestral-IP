@@ -17,18 +17,7 @@ const AdminPanelMenu = () => (
     >
       Resumen
     </NavLink>
-    <NavLink
-      to="/administrator/users"
-      className={({ isActive }) =>
-        `block px-4 py-2 rounded-lg font-semibold transition ${
-          isActive
-            ? "bg-yellow-400 text-purple-900"
-            : "text-purple-800 hover:bg-yellow-100"
-        }`
-      }
-    >
-      Usuarios
-    </NavLink>
+
     <NavLink
       to="/administrator/promotions"
       className={({ isActive }) =>
