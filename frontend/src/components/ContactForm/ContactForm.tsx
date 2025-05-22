@@ -1,6 +1,11 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styled from "styled-components";
+import emailjs from "@emailjs/browser";
+
+const SERVICE_ID = "service_ln2frmg";
+const TEMPLATE_ID = "template_gi2llgy";
+const PUBLIC_KEY = "qdkFnM8pCKZJTQYYk";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +13,8 @@ const ContactForm = () => {
     email: "",
     message: "",
   });
+  const [sending, setSending] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -15,9 +22,29 @@ const ContactForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Datos enviados:", formData);
+    setSending(true);
+    setSuccess(null);
+
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
+        },
+        PUBLIC_KEY
+      );
+      setSuccess("¡Mensaje enviado correctamente!");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      setSuccess("Hubo un error al enviar el mensaje.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -47,7 +74,10 @@ const ContactForm = () => {
           onChange={handleChange}
           required
         />
-        <button type="submit">Enviar</button>
+        <button type="submit" disabled={sending}>
+          {sending ? "Enviando..." : "Enviar"}
+        </button>
+        {success && <div style={{ color: "#fff", marginTop: 10 }}>{success}</div>}
       </form>
     </StyledWrapper>
   );
@@ -63,7 +93,7 @@ const StyledWrapper = styled.div`
     flex-direction: column;
     gap: 16px;
     width: 100%;
-    max-width: 600px; /* Aumentado desde 400px */
+    max-width: 600px;
     background-color: #111827;
     padding: 40px;
     border-radius: 12px;
@@ -85,14 +115,14 @@ const StyledWrapper = styled.div`
     border-radius: 8px;
     padding: 12px 16px;
     font-size: 15px;
-    color: rgba(255, 255, 255, 0.85); /* Blanco con opacidad */
+    color: rgba(255, 255, 255, 0.85);
     width: 100%;
     outline: none;
   }
 
   .form input::placeholder,
   .form textarea::placeholder {
-    color: rgba(255, 255, 255, 0.4); /* Placeholder gris claro */
+    color: rgba(255, 255, 255, 0.4);
   }
 
   .form textarea {
