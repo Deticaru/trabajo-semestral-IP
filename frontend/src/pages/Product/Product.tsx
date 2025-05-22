@@ -31,7 +31,9 @@ const Product = () => {
             <ProductImage
               src={
                 product.imagenes && product.imagenes.length > 0
-                  ? product.imagenes[0].imagen_producto
+                  ? product.imagenes[0].imagen_producto.startsWith("http")
+                    ? product.imagenes[0].imagen_producto
+                    : `http://localhost:8000${product.imagenes[0].imagen_producto}`
                   : ""
               }
               alt={product.nom_producto}

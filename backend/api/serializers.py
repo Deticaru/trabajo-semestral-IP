@@ -29,7 +29,7 @@ class ImagenProductoSerializer(serializers.ModelSerializer):
 class ProductoSerializer(serializers.ModelSerializer):
     categoria = CategoriaSerializer(source='tag_producto', read_only=True)
     marca = MarcaSerializer(source='marca_producto', read_only=True)
-    imagenes = ImagenProductoSerializer(many=True, read_only=True, source='imagenproducto_set')
+    imagenes = ImagenProductoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Producto

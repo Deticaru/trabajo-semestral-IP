@@ -40,20 +40,25 @@ const Catalog = () => {
             ) : products.length === 0 ? (
               <p>No hay productos disponibles.</p>
             ) : (
-              products.map((product) => (
-                <Card
-                  key={product.id}
-                  id={product.id}
-                  image={
-                    product.imagenes && product.imagenes.length > 0
+              products.map((product) => {
+                const img =
+                  product.imagenes && product.imagenes.length > 0
+                    ? product.imagenes[0].imagen_producto.startsWith("http")
                       ? product.imagenes[0].imagen_producto
-                      : ""
-                  }
-                  title={product.nom_producto}
-                  description={product.desc_producto}
-                  price={product.precio_producto}
-                />
-              ))
+                      : `http://localhost:8000${product.imagenes[0].imagen_producto}`
+                    : "";
+                console.log("IMG:", img);
+                return (
+                  <Card
+                    key={product.id}
+                    id={product.id}
+                    image={img}
+                    title={product.nom_producto}
+                    description={product.desc_producto}
+                    price={product.precio_producto}
+                  />
+                );
+              })
             )}
           </CardsWrapper>
         </Content>
