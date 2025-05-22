@@ -37,12 +37,6 @@ const AdminDashboard = () => (
         </div>
         <div className="flex gap-4">
           <NavLink
-            to="/administrator/users"
-            className="bg-yellow-400 text-purple-900 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition"
-          >
-            Gestionar Usuarios
-          </NavLink>
-          <NavLink
             to="/administrator/promotions"
             className="bg-green-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-800 transition"
           >
@@ -53,6 +47,30 @@ const AdminDashboard = () => (
             className="bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-800 transition"
           >
             Historial de Actividad
+          </NavLink>
+          <NavLink
+            to="/administrator/products"
+            className="bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-800 transition"
+          >
+            Gestionar Productos
+          </NavLink>
+          <NavLink
+            to="/administrator/categories"
+            className="bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-800 transition"
+          >
+            Gestionar Categorías
+          </NavLink>
+          <NavLink
+            to="/administrator/brands"
+            className="bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-800 transition"
+          >
+            Gestionar Marcas
+          </NavLink>
+          <NavLink
+            to="/administrator/usersc"
+            className="bg-yellow-400 text-purple-900 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition"
+          >
+            Gestionar Usuarios Personal
           </NavLink>
         </div>
       </main>

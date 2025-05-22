@@ -23,9 +23,12 @@ import AccountantDashboard from "./pages/Accountant/AccountantDashboard";
 import AccountantPayments from "./pages/Accountant/AccountantPayments";
 import AccountantReports from "./pages/Accountant/AccountantReports";
 import AdminDashboard from "./pages/Administrator/AdminDashboard";
-import AdminUsers from "./pages/Administrator/AdminUsers";
 import AdminPromotions from "./pages/Administrator/AdminPromotions";
 import AdminActivity from "./pages/Administrator/AdminActivity";
+import AdminProducts from "./pages/Administrator/AdminProducts";
+import AdminCategories from "./pages/Administrator/AdminCategories";
+import AdminBrands from "./pages/Administrator/AdminBrands";
+import AdminUsersC from "./pages/Administrator/AdminUsersC";
 import WebpayReturn from "./pages/Cart/WebpayReturn";
 import "./App.css";
 import Checkout from "./pages/Checkout/Checkout";
@@ -54,13 +57,19 @@ function App() {
           <Route path="/accountant/payments" element={<AccountantPayments />} />
           <Route path="/accountant/reports" element={<AccountantReports />} />
           <Route path="/administrator" element={<AdminDashboard />} />
-          <Route path="/administrator/users" element={<AdminUsers />} />
           <Route
             path="/administrator/promotions"
             element={<AdminPromotions />}
           />
           <Route path="/administrator/activity" element={<AdminActivity />} />
           <Route path="/webpay/return" element={<WebpayReturn />} />
+          <Route path="/administrator/products" element={<AdminProducts />} />
+          <Route
+            path="/administrator/categories"
+            element={<AdminCategories />}
+          />
+          <Route path="/administrator/brands" element={<AdminBrands />} />
+          <Route path="/administrator/usersC" element={<AdminUsersC />} />
         </Routes>
       </Router>
       <BackToTop />
