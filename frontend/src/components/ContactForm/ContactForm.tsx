@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import styled from "styled-components";
 import emailjs from "@emailjs/browser";
+import axios from "axios"; // Agrega esta línea
 
 const SERVICE_ID = "service_ln2frmg";
 const TEMPLATE_ID = "template_gi2llgy";
@@ -28,6 +29,14 @@ const ContactForm = () => {
     setSuccess(null);
 
     try {
+      // 1. Envía los datos al backend
+      await axios.post("http://localhost:8000/api/contacto/", {
+        nombre: formData.name,
+        correo: formData.email,
+        mensaje: formData.message,
+      });
+
+      // 2. Envía el correo con EmailJS (como ya lo tienes)
       await emailjs.send(
         SERVICE_ID,
         TEMPLATE_ID,
@@ -38,6 +47,7 @@ const ContactForm = () => {
         },
         PUBLIC_KEY
       );
+
       setSuccess("¡Mensaje enviado correctamente!");
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
