@@ -59,13 +59,25 @@ const Checkout = () => {
     if (cart.length === 0) return;
     setLoading(true);
     try {
-      // Prepare order data
+      // 1. Guardar carrito y datos en backend antes de redirigir a Webpay
+      const pedidoRes = await axios.post("http://localhost:8000/api/guardar-carrito/", {
+        cart,
+        name: form.name,
+        email: form.email,
+        address: deliveryType === "home" ? (addressType === "other" ? customAddress : form.address) : "Retiro en tienda",
+        deliveryType,
+        addressType,
+      }, { withCredentials: true }); // importante para sesión
+
+      const pedido_id = pedidoRes.data.pedido_id; // <-- Asegúrate que el backend lo devuelva así
+      if (!pedido_id) throw new Error("No se pudo obtener el ID del pedido");
+
+      // 2. Crear orden Webpay, usando el id del pedido en buy_order
       const orderData = {
-        buy_order: `ORD-${Date.now()}`,
+        buy_order: `ORD-${pedido_id}-${Date.now()}`,
         session_id: form.email,
         amount: total,
         return_url: `${window.location.origin}/checkout/webpay-return`,
-        // Optionally, send more info (user, address, cart, etc)
       };
       const res = await axios.post("http://localhost:8000/api/webpay/create/", orderData);
       const { url, token } = res.data;

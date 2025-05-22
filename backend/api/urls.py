@@ -19,6 +19,7 @@ urlpatterns = [
     path('login/', vista_login),
     path('webpay/create/', webpay_create_transaction),
     path('webpay/commit/', webpay_commit_transaction),
+    path('guardar-carrito/', guardar_carrito),
     path('registrar/', registrar_usuario, name='registrar_usuario'),
     path('profile/', profile, name='profile'),
     #path('productos/', productos_list),

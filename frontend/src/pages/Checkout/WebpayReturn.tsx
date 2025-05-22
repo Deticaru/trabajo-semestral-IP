@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -8,15 +8,18 @@ const WebpayReturn = () => {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const hasCommitted = useRef(false); // 👉 nuevo
 
   useEffect(() => {
+    if (hasCommitted.current) return; // ✅ evita ejecutar doble
+    hasCommitted.current = true;
+
     const params = new URLSearchParams(location.search);
     const token_ws = params.get("token_ws") || (document.forms[0]?.token_ws?.value ?? "");
     const tbk_token = params.get("TBK_TOKEN");
     const tbk_order = params.get("TBK_ORDEN_COMPRA");
     const tbk_session = params.get("TBK_ID_SESION");
 
-    // Si viene de anulación Webpay
     if (tbk_token && tbk_order && tbk_session) {
       navigate("/checkout/webpay-cancelled");
       return;
@@ -26,14 +29,16 @@ const WebpayReturn = () => {
       setLoading(false);
       return;
     }
+
     axios
       .post("http://localhost:8000/api/webpay/commit/", { token_ws })
       .then((res) => {
         setResult(res.data);
         setLoading(false);
       })
-      .catch(() => {
-        setError("Error al confirmar el pago");
+      .catch((err) => {
+        const msg = err?.response?.data?.error || "Error al confirmar el pago";
+        setError(msg);
         setLoading(false);
       });
   }, [location]);

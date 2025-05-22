@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from .models import Usuario, Tipo_usuario
+from .models import EstadoPedido, Usuario, Tipo_usuario
 from django.contrib.auth.hashers import make_password
 from rest_framework import viewsets, generics
 from .models import Producto, Categoria, Marca, ImagenProducto, Sucursal, StockSucursal, Pedido, DetalleProducto, Contacto
@@ -14,6 +14,9 @@ from .serializers import *
 from rest_framework import status
 import json
 from .webpay_config import get_webpay_transaction
+from transbank.error.transbank_error import TransbankError
+from transbank.webpay.webpay_plus.transaction import Transaction
+from django.utils import timezone
 
 tx = get_webpay_transaction()
 
@@ -107,11 +110,99 @@ def webpay_create_transaction(request):
     return Response({'url': resp['url'], 'token': resp['token']})
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def webpay_commit_transaction(request):
     token = request.data.get('token_ws')
-    tx = get_webpay_transaction()
-    resp = tx.commit(token)
-    return Response(resp)
+    tx = get_webpay_transaction().commit(token)
+
+    if tx['status'] != 'AUTHORIZED':
+        return Response(tx, status=409)
+
+    # Obtener usuario actual
+    user = request.user
+
+    # Obtener estado "Aprobado" (ajusta el nombre según lo que tengas en tu tabla EstadoPedido)
+    estado_aprobado = EstadoPedido.objects.get(nombre_estado_pedido='Aprobado')
+
+    # Suponiendo que tienes el carrito en la sesión:
+    cart = request.session.get('cart', {})  # cart = {producto_id: cantidad}
+
+    if not cart:
+        return Response({"error": "Carrito vacío"}, status=400)
+
+    # Calcular total del pedido
+    total = 0
+    for producto_id, cantidad in cart.items():
+        try:
+            producto = Producto.objects.get(id=producto_id)
+            total += producto.precio_producto * cantidad
+        except Producto.DoesNotExist:
+            continue
+
+    # Crear el Pedido
+    pedido = Pedido.objects.create(
+        fecha_pedido=timezone.now().date(),
+        total_pedido=total,
+        estado_pedido=estado_aprobado,
+        usuario=user
+    )
+
+    # Crear los DetalleProducto
+    for producto_id, cantidad in cart.items():
+        try:
+            producto = Producto.objects.get(id=producto_id)
+            subtotal = producto.precio_producto * cantidad
+            DetalleProducto.objects.create(
+                cantidad_productos=cantidad,
+                subtotal_producto=subtotal,
+                producto=producto,
+                pedido=pedido
+            )
+        except Producto.DoesNotExist:
+            continue
+
+    # Limpiar el carrito
+    request.session['cart'] = {}
+
+    return Response({
+        "message": "Pago confirmado y pedido creado",
+        "pedido_id": pedido.id,
+        "webpay_response": tx
+    })
+
+@api_view(['POST'])
+def webpay_commit(request):
+    token_ws = request.data.get('token_ws')
+    # Aquí deberías obtener la info de la transacción desde Webpay
+    # Simulación: supón que tienes buy_order y status
+    # buy_order = 'ORD-<pedido_id>-<timestamp>'
+    # status = 'AUTHORIZED' o 'FAILED'
+    #
+    # Debes obtener buy_order y status reales desde la API de Webpay
+    buy_order = request.data.get('buy_order')
+    status = request.data.get('status')  # 'AUTHORIZED' o 'FAILED'
+    # Extraer el id del pedido del buy_order
+    def extraer_id_de_buy_order(buy_order):
+        try:
+            return int(buy_order.split('-')[1])
+        except Exception:
+            return None
+    pedido_id = extraer_id_de_buy_order(buy_order)
+    if not pedido_id:
+        return Response({'error': 'No se pudo extraer el id del pedido'}, status=400)
+    try:
+        pedido = Pedido.objects.get(id=pedido_id)
+    except Pedido.DoesNotExist:
+        return Response({'error': 'Pedido no encontrado'}, status=404)
+    if status == 'AUTHORIZED':
+        estado_pagado = EstadoPedido.objects.get(nombre_estado_pedido='Pagado')
+        pedido.estado_pedido = estado_pagado
+    else:
+        estado_cancelado = EstadoPedido.objects.get(nombre_estado_pedido='Cancelado')
+        pedido.estado_pedido = estado_cancelado
+    pedido.save()
+    return Response({'success': True, 'pedido_id': pedido.id, 'nuevo_estado': pedido.estado_pedido.nombre_estado_pedido})
+
 # Create your views here.
 # Crear funciones o clases para cada endpoint
 
@@ -207,3 +298,49 @@ def contacto(request):
 def moneda_convertir(request):
     # Aquí deberías consumir la API del Banco Central y retornar la conversión
     return Response({"message": "Conversión de moneda"})
+
+@api_view(['POST'])
+def guardar_carrito(request):
+    """
+    Guarda el carrito y datos de usuario en la sesión para usarlos tras el pago Webpay.
+    Espera: {
+        cart: [{id, title, image, price, quantity}],
+        name, email, address, deliveryType, addressType
+    }
+    """
+    data = request.data
+    request.session['cart'] = data.get('cart', [])
+    request.session['checkout_data'] = {
+        'name': data.get('name'),
+        'email': data.get('email'),
+        'address': data.get('address'),
+        'deliveryType': data.get('deliveryType'),
+        'addressType': data.get('addressType'),
+    }
+    request.session.modified = True
+    return Response({'success': True, 'msg': 'Carrito y datos guardados en sesión'})
+
+@api_view(['POST'])
+def guardar_carrito(request):
+    data = request.data
+    cart = data.get('cart', [])
+    # Buscar el estado 'Pago Pendiente' en EstadoPedido
+    estado_pendiente = EstadoPedido.objects.get(nombre_estado_pedido='Pago Pendiente')
+    # Crear el pedido con estado pendiente
+    pedido = Pedido.objects.create(
+        usuario=request.user,
+        estado_pedido=estado_pendiente,
+        fecha_pedido=timezone.now().date(),
+        total_pedido=sum(item.get('price', 0) * item.get('quantity', 0) for item in cart)
+    )
+    # Asociar los productos del carrito al pedido
+    for item in cart:
+        producto_id = item.get('id')
+        cantidad = item.get('quantity')
+        DetalleProducto.objects.create(
+            pedido=pedido,
+            producto_id=producto_id,
+            cantidad_productos=cantidad,
+            subtotal_producto=item.get('price', 0) * cantidad
+        )
+    return Response({'pedido_id': pedido.id, 'status': 'Carrito guardado'})
