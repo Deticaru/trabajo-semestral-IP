@@ -16,6 +16,10 @@ from .webpay_config import get_webpay_transaction
 from transbank.error.transbank_error import TransbankError
 from transbank.webpay.webpay_plus.transaction import Transaction
 from django.utils import timezone
+import requests
+import bcchapi
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 tx = get_webpay_transaction()
 
@@ -241,11 +245,6 @@ def contacto(request):
          return Response(serializer.data, status=201)
      return Response(serializer.errors, status=400)
 
-@api_view(['GET'])
-def moneda_convertir(request):
-    # Aquí deberías consumir la API del Banco Central y retornar la conversión
-    return Response({"message": "Conversión de moneda"})
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def guardar_carrito(request):
@@ -278,3 +277,34 @@ def guardar_carrito(request):
     except Exception as e:
         print("ERROR EN GUARDAR_CARRITO:", e)
         return Response({'error': str(e)}, status=500)
+
+@api_view(['GET'])
+def moneda_convertir(request):
+    monto = float(request.GET.get('monto', 1))
+    moneda = request.GET.get('moneda', 'CLP')
+
+    # Solo soportamos CLP a USD
+    if moneda != "CLP":
+        return Response({"error": "Solo se soporta conversión CLP a USD"}, status=400)
+
+    try:
+        siete = bcchapi.Siete("gastonzamora2013@gmail.com", "xz4pV7e84q3.ieX")
+        # Usar cuadro para obtener el dólar observado
+        df = siete.cuadro(series=["F073.TCO.PRE.Z.D"], nombres=["dolar"])
+        if df is None or df.empty:
+            print("bcchapi: DataFrame vacío o None")
+            return Response({"error": "No se pudo obtener el valor del dólar (sin datos)"}, status=500)
+        valor_ultimo = float(df["dolar"].dropna().iloc[-1])
+    except Exception as e:
+        print("ERROR EN MONEDA_CONVERTIR:", e)
+        return Response({"error": f"No se pudo obtener el valor del dólar: {str(e)}"}, status=500)
+
+    monto_usd = monto / valor_ultimo
+
+    return Response({
+        "moneda_origen": "CLP",
+        "moneda_destino": "USD",
+        "valor_cambio": valor_ultimo,
+        "monto_origen": monto,
+        "monto_convertido": round(monto_usd, 2)
+    })
