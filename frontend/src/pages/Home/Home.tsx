@@ -1,16 +1,30 @@
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Hero from "../../components/Hero/Hero";
-import { useEffect } from "react";
-import { products } from "../../data/products";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../../context/CartContext"; // Usa tu contexto real
 
 const Home = () => {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { addToCart } = useCart(); // Usa el mismo hook/contexto que en Product/Catalog
+  const [clickedId, setClickedId] = useState<number | null>(null);
+
   useEffect(() => {
     document.title = "Inicio";
+    fetch("http://localhost:8000/api/productos/")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
-  // Selecciona los primeros 3 productos como destacados
-  const featuredProducts = products.slice(0, 3);
+  // Últimos 3 productos (ordenados del más nuevo al más antiguo)
+  const featuredProducts = products.slice(-3).reverse();
 
   return (
     <>
@@ -32,34 +46,97 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg"
-              >
-                <div className="w-full h-64 flex items-center justify-center bg-gray-100">
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="max-h-60 object-contain"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {product.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4">{product.description}</p>
-                  <div className="flex items-center justify-between">
-                    <p className="text-lg font-bold text-red-700">
-                      ${product.price.toLocaleString()}
-                    </p>
-                    <button className="bg-red-100 hover:bg-red-200 text-red-800 font-medium py-2 px-4 rounded-md transition-colors duration-200">
-                      Añadir al carrito
-                    </button>
+            {loading ? (
+              <p className="col-span-3 text-center">Cargando productos...</p>
+            ) : featuredProducts.length === 0 ? (
+              <p className="col-span-3 text-center">No hay productos disponibles.</p>
+            ) : (
+              featuredProducts.map((product) => {
+                const img =
+                  product.imagenes && product.imagenes.length > 0
+                    ? product.imagenes[0].imagen_producto.startsWith("http")
+                      ? product.imagenes[0].imagen_producto
+                      : `http://localhost:8000${product.imagenes[0].imagen_producto}`
+                    : "";
+                return (
+                  <div
+                    key={product.id}
+                    className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
+                    onClick={() => navigate(`/product/${product.id}`)}
+                  >
+                    <div className="w-full h-64 flex items-center justify-center bg-gray-100">
+                      <img
+                        src={img}
+                        alt={product.nom_producto}
+                        className="max-h-60 object-contain"
+                      />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {product.nom_producto}
+                      </h3>
+                      <p className="text-gray-600 mb-4">{product.desc_producto}</p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-lg font-bold text-red-700">
+                          ${Number(product.precio_producto).toLocaleString()}
+                        </p>
+                        <span className="relative">
+                          <button
+                            className={`bg-red-100 hover:bg-red-200 text-red-800 font-medium py-2 px-4 rounded-md transition-all duration-300
+                              ${clickedId === product.id ? "ring-2 ring-green-400 scale-105 shadow-lg" : ""}
+                            `}
+                            onClick={e => {
+                              e.stopPropagation();
+                              addToCart({
+                                id: product.id,
+                                title: product.nom_producto,
+                                image: img,
+                                price: product.precio_producto,
+                                quantity: 1,
+                              });
+                              setClickedId(product.id);
+                              setTimeout(() => setClickedId(null), 700);
+                            }}
+                          >
+                            Añadir al carrito
+                          </button>
+                          {clickedId === product.id && (
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: "-2.2rem",
+                                right: 0,
+                                background: "#22c55e",
+                                color: "white",
+                                fontSize: "0.85rem",
+                                padding: "0.25rem 0.75rem",
+                                borderRadius: "9999px",
+                                boxShadow: "0 2px 8px rgba(34,197,94,0.15)",
+                                opacity: 1,
+                                animation: "fadeInUp .5s",
+                                pointerEvents: "none",
+                                zIndex: 10,
+                              }}
+                            >
+                              ¡Agregado!
+                            </span>
+                          )}
+                          {/* Animación inline */}
+                          <style>
+                            {`
+                              @keyframes fadeInUp {
+                                from { opacity: 0; transform: translateY(10px);}
+                                to { opacity: 1; transform: translateY(0);}
+                              }
+                            `}
+                          </style>
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                );
+              })
+            )}
           </div>
 
           <div className="mt-12 text-center">

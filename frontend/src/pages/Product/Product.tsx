@@ -9,8 +9,8 @@ const Product = () => {
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<any>(null);
-
   const { addToCart } = useCart();
+  const [clicked, setClicked] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -71,38 +71,62 @@ const Product = () => {
                   +
                 </CounterButton>
               </Counter>
-              <AddButton
-                aria-label="Agregar al carrito"
-                onClick={() =>
-                  addToCart({
-                    id: product.id,
-                    title: product.nom_producto,
-                    image:
-                      product.imagenes && product.imagenes.length > 0
-                        ? product.imagenes[0].imagen_producto
-                        : "",
-                    price: product.precio_producto,
-                    quantity,
-                  })
-                }
-              >
-                {/* ...icono SVG... */}
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
+              <div style={{ position: "relative" }}>
+                <AddButton
+                  aria-label="Agregar al carrito"
+                  onClick={() => {
+                    addToCart({
+                      id: product.id,
+                      title: product.nom_producto,
+                      image:
+                        product.imagenes && product.imagenes.length > 0
+                          ? product.imagenes[0].imagen_producto
+                          : "",
+                      price: product.precio_producto,
+                      quantity,
+                    });
+                    setClicked(true);
+                    setTimeout(() => setClicked(false), 700);
+                  }}
+                  style={{
+                    transition: "all 0.3s",
+                    boxShadow: clicked ? "0 0 0 4px #22c55e55" : undefined,
+                    transform: clicked ? "scale(1.07)" : undefined,
+                  }}
                 >
-                  <path
-                    d="M7.2998 5H22L20 12H8.37675M21 16H9L7 3H4M4 8H2M5 11H2M6 14H2M10 20C10 20.5523 9.55228 21 9 21C8.44772 21 8 20.5523 8 20C8 19.4477 8.44772 19 9 19C9.55228 19 10 19.4477 10 20ZM21 20C21 20.5523 20.5523 21 20 21C19.4477 21 19 20.5523 19 20C19 19.4477 19.4477 19 20 19C20.5523 19 21 19.4477 21 20Z"
-                    stroke="#ffffff"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </AddButton>
+                  {/* ...icono SVG... */}
+                  Añadir al carrito
+                </AddButton>
+                {clicked && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-2.2rem",
+                      right: 0,
+                      background: "#22c55e",
+                      color: "white",
+                      fontSize: "0.85rem",
+                      padding: "0.25rem 0.75rem",
+                      borderRadius: "9999px",
+                      boxShadow: "0 2px 8px rgba(34,197,94,0.15)",
+                      opacity: 1,
+                      animation: "fadeInUp .5s",
+                      pointerEvents: "none",
+                      zIndex: 10,
+                    }}
+                  >
+                    ¡Agregado!
+                  </span>
+                )}
+                <style>
+                  {`
+              @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(10px);}
+                to { opacity: 1; transform: translateY(0);}
+              }
+            `}
+                </style>
+              </div>
             </Actions>
           </InfoSection>
         </ProductContainer>

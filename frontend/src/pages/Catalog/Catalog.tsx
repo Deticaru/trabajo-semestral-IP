@@ -5,8 +5,10 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import FilterSidebar from "../../components/FilterSidebar/FilterSidebar";
 import styled from "styled-components";
+import { useCart } from "../../context/CartContext";
 
 const Catalog = () => {
+  const { addToCart } = useCart();
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -17,6 +19,7 @@ const Catalog = () => {
     maxPrice: "",
     marca: "",
   });
+  const [clickedId, setClickedId] = useState<number | null>(null);
 
   // Traer categorías
   useEffect(() => {
