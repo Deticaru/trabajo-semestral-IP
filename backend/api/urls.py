@@ -11,14 +11,14 @@ router.register(r'categorias', CategoriaViewSet, basename='categoria')
 
 from .views import (
     hello, vista_login, productos_list, producto_detalle, categorias_list,
-    sucursal_stock, realizar_pedido, contacto, moneda_convertir
+    sucursal_stock, realizar_pedido, contacto, moneda_convertir, webpay_commit
 )
 
 urlpatterns = [
     path('hello/', hello),
     path('login/', vista_login),
     path('webpay/create/', webpay_create_transaction),
-    path('webpay/commit/', webpay_commit_transaction),
+    path('webpay/commit/', webpay_commit),
     path('guardar-carrito/', guardar_carrito),
     path('registrar/', registrar_usuario, name='registrar_usuario'),
     path('profile/', profile, name='profile'),

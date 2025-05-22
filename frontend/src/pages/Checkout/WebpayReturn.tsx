@@ -11,7 +11,7 @@ const WebpayReturn = () => {
   const hasCommitted = useRef(false); // 👉 nuevo
 
   useEffect(() => {
-    if (hasCommitted.current) return; // ✅ evita ejecutar doble
+    if (hasCommitted.current) return;
     hasCommitted.current = true;
 
     const params = new URLSearchParams(location.search);
@@ -31,7 +31,9 @@ const WebpayReturn = () => {
     }
 
     axios
-      .post("http://localhost:8000/api/webpay/commit/", { token_ws })
+      .post("http://localhost:8000/api/webpay/commit/", {
+        token_ws // solo envía el token_ws
+      })
       .then((res) => {
         setResult(res.data);
         setLoading(false);
