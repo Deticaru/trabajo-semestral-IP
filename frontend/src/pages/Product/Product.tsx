@@ -9,6 +9,7 @@ const Product = () => {
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<any>(null);
+  const [usdPrice, setUsdPrice] = useState<number | null>(null);
 
   const { addToCart } = useCart();
 
@@ -19,6 +20,19 @@ const Product = () => {
       .then((data) => setProduct(data))
       .catch(() => setProduct(null));
   }, [id]);
+
+  // Obtener precio en USD cuando se carga el producto
+  useEffect(() => {
+    if (!product) return;
+    fetch(
+      `http://localhost:8000/api/moneda/convertir/?monto=${product.precio_producto}&moneda=CLP`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.monto_convertido) setUsdPrice(data.monto_convertido);
+      })
+      .catch(() => setUsdPrice(null));
+  }, [product]);
 
   if (!product) return null;
 
@@ -54,7 +68,24 @@ const Product = () => {
             <Stock>
               Unidades disponibles: {product.stock ? product.stock : "N/A"}
             </Stock>
-            <Price>${Number(product.precio_producto).toLocaleString()}</Price>
+            <Price>
+              ${Number(product.precio_producto).toLocaleString()} CLP
+              {usdPrice !== null && (
+                <span
+                  style={{
+                    marginLeft: 12,
+                    color: "#1a7f37",
+                    fontWeight: 500,
+                  }}
+                >
+                  (~USD{" "}
+                  {usdPrice.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })})
+                </span>
+              )}
+            </Price>
             <ShortDesc>{product.desc_producto}</ShortDesc>
             <LongDesc>
               {product.descripcion_larga ? product.descripcion_larga : ""}
