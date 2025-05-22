@@ -62,6 +62,12 @@ MIDDLEWARE = [
 
 CORS_ALLOW_ALL_ORIGINS = True #SÓLO PARA DESARROLLO
 
+#CORS_ALLOWED_ORIGINS = [
+    #"http://localhost:3000",
+    #"http://127.0.0.1:3000",
+    # otros orígenes...
+#]
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
