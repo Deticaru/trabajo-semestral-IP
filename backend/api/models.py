@@ -2,6 +2,10 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.db import models
 from django.conf import settings # Hace referencia al modelo Usuario personalizado
 #from django.utils.html import mark_safe
+
+
+# Create your models here.
+# Luego deberas registrarlos en admin.py
 class Tipo_usuario(models.Model):
     nom_tipo        = models.CharField(max_length=30, verbose_name='Nombre Tipo Usuario')
 
@@ -82,7 +86,7 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nom_categoria
 
-# Create your models here.
+
 class Producto(models.Model):
     nom_producto        = models.CharField(max_length=100, verbose_name='Nombre Producto')
     desc_producto       = models.CharField(max_length=1500, verbose_name='Descripción Producto')
@@ -203,3 +207,12 @@ class PagoPedido(models.Model):
 
     def __str__(self):
         return f"Pago de Pedido {self.pedido.id} - {self.monto_pago} CLP"
+    
+class Contacto(models.Model):
+    nombre = models.CharField(max_length=100)
+    correo = models.EmailField()
+    mensaje = models.TextField()
+    fecha_envio = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Mensaje de {self.nombre} - {self.correo}"
