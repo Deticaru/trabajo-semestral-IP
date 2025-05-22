@@ -1,13 +1,25 @@
 // src/pages/Catalog.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../../components/Card/Card";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import FilterSidebar from "../../components/FilterSidebar/FilterSidebar";
 import styled from "styled-components";
-import { products } from "../../data/products"; // <--- IMPORTA AQUÍ
 
 const Catalog = () => {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/productos/")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -23,16 +35,26 @@ const Catalog = () => {
         <Content>
           <FilterSidebar />
           <CardsWrapper>
-            {products.map((product) => (
-              <Card
-                key={product.id}
-                id={product.id}
-                image={product.image}
-                title={product.title}
-                description={product.description}
-                price={product.price}
-              />
-            ))}
+            {loading ? (
+              <p>Cargando productos...</p>
+            ) : products.length === 0 ? (
+              <p>No hay productos disponibles.</p>
+            ) : (
+              products.map((product) => (
+                <Card
+                  key={product.id}
+                  id={product.id}
+                  image={
+                    product.imagenes && product.imagenes.length > 0
+                      ? product.imagenes[0].imagen_producto
+                      : ""
+                  }
+                  title={product.nom_producto}
+                  description={product.desc_producto}
+                  price={product.precio_producto}
+                />
+              ))
+            )}
           </CardsWrapper>
         </Content>
       </Main>
