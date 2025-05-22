@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import { useCart } from "../../context/CartContext";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../Login/Login.css";
 
 const Checkout = () => {
-  const { cart, clearCart } = useCart();
-  const navigate = useNavigate();
+  const { cart } = useCart();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -18,6 +17,7 @@ const Checkout = () => {
   const [addressType, setAddressType] = useState<"my" | "other">("my");
   const [customAddress, setCustomAddress] = useState("");
   const [fade, setFade] = useState("fade-in");
+  const [loading, setLoading] = useState(false);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -45,8 +45,9 @@ const Checkout = () => {
     setCustomAddress(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     if (!form.name || !form.email) {
       setError("Por favor completa todos los campos obligatorios.");
       return;
@@ -55,9 +56,68 @@ const Checkout = () => {
       setError("Por favor ingresa la dirección de despacho.");
       return;
     }
-    // Aquí podrías enviar los datos al backend o continuar con el flujo de pago
-    clearCart();
-    navigate("/success");
+    if (cart.length === 0) return;
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        setError("Debes iniciar sesión para realizar el pago.");
+        setLoading(false);
+        return;
+      }
+      // 1. Guardar carrito y datos en backend antes de redirigir a Webpay
+      const pedidoRes = await axios.post(
+        "http://localhost:8000/api/guardar-carrito/",
+        {
+          cart,
+          name: form.name,
+          email: form.email,
+          address:
+            deliveryType === "home"
+              ? addressType === "other"
+                ? customAddress
+                : form.address
+              : "Retiro en tienda",
+          deliveryType,
+          addressType,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        }
+      ); // importante para sesión
+
+      const pedido_id = pedidoRes.data.pedido_id; // <-- Asegúrate que el backend lo devuelva así
+      if (!pedido_id) throw new Error("No se pudo obtener el ID del pedido");
+
+      // 2. Crear orden Webpay, usando el id del pedido en buy_order
+      const orderData = {
+        buy_order: `ORD-${pedido_id}-${Date.now()}`,
+        session_id: form.email,
+        amount: total,
+        return_url: `${window.location.origin}/checkout/webpay-return`,
+      };
+      const res = await axios.post(
+        "http://localhost:8000/api/webpay/create/",
+        orderData
+      );
+      const { url, token: webpayToken } = res.data;
+      // Create and submit form to Webpay
+      const formEl = document.createElement("form");
+      formEl.method = "POST";
+      formEl.action = url;
+      formEl.style.display = "none";
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "token_ws";
+      input.value = webpayToken;
+      formEl.appendChild(input);
+      document.body.appendChild(formEl);
+      formEl.submit();
+    } catch (err: any) {
+      setError("Error al iniciar el pago. Intenta nuevamente.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -67,9 +127,13 @@ const Checkout = () => {
         <div className="max-w-2xl mx-auto py-12 px-4">
           <h1 className="text-3xl font-bold mb-8 text-gray-900">Checkout</h1>
           <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900">Datos de envío</h2>
+            <h2 className="text-xl font-semibold mb-4 text-gray-900">
+              Datos de envío
+            </h2>
             <div className="mb-4">
-              <label className="block mb-1 font-medium text-gray-800">Nombre</label>
+              <label className="block mb-1 font-medium text-gray-800">
+                Nombre
+              </label>
               <input
                 type="text"
                 name="name"
@@ -80,7 +144,9 @@ const Checkout = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block mb-1 font-medium text-gray-800">Correo electrónico</label>
+              <label className="block mb-1 font-medium text-gray-800">
+                Correo electrónico
+              </label>
               <input
                 type="email"
                 name="email"
@@ -92,7 +158,9 @@ const Checkout = () => {
             </div>
             {/* Selección de tipo de entrega */}
             <div className="mb-4">
-              <label className="block mb-2 font-medium text-gray-800">Tipo de entrega</label>
+              <label className="block mb-2 font-medium text-gray-800">
+                Tipo de entrega
+              </label>
               <div className="flex gap-6">
                 <label className="flex items-center gap-2 text-gray-800">
                   <input
@@ -117,7 +185,9 @@ const Checkout = () => {
             {/* Fade para opciones de despacho */}
             <div className={deliveryType === "home" ? fade : "hidden"}>
               <div className="mb-4">
-                <label className="block mb-2 font-medium text-gray-800">Dirección de despacho</label>
+                <label className="block mb-2 font-medium text-gray-800">
+                  Dirección de despacho
+                </label>
                 <div className="flex gap-6">
                   <label className="flex items-center gap-2 text-gray-800">
                     <input
@@ -150,18 +220,29 @@ const Checkout = () => {
                 )}
               </div>
             </div>
-            <h2 className="text-xl font-semibold mt-8 mb-4 text-gray-900">Resumen de compra</h2>
+            <h2 className="text-xl font-semibold mt-8 mb-4 text-gray-900">
+              Resumen de compra
+            </h2>
             {cart.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-lg text-gray-600 mb-6">Tu carrito está vacío.</p>
+                <p className="text-lg text-gray-600 mb-6">
+                  Tu carrito está vacío.
+                </p>
               </div>
             ) : (
               <>
                 <ul className="mb-4">
                   {cart.map((item) => (
-                    <li key={item.id} className="flex justify-between py-1 text-gray-700">
-                      <span>{item.title} x{item.quantity}</span>
-                      <span>${(item.price * item.quantity).toLocaleString()}</span>
+                    <li
+                      key={item.id}
+                      className="flex justify-between py-1 text-gray-700"
+                    >
+                      <span>
+                        {item.title} x{item.quantity}
+                      </span>
+                      <span>
+                        ${(item.price * item.quantity).toLocaleString()}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -175,9 +256,9 @@ const Checkout = () => {
             <button
               type="submit"
               className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-3 rounded transition"
-              disabled={cart.length === 0}
+              disabled={cart.length === 0 || loading}
             >
-              Realizar pedido
+              {loading ? "Redirigiendo a Webpay..." : "Realizar pedido"}
             </button>
           </form>
         </div>
