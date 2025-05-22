@@ -8,6 +8,9 @@ from .views import *
 router = DefaultRouter()
 router.register(r'productos', ProductoViewSet, basename='producto')
 router.register(r'categorias', CategoriaViewSet, basename='categoria')
+router.register(r'marcas', MarcaViewSet, basename='marca')
+router.register(r'tipo_usuario', TipoUsuarioViewSet, basename='tipo_usuario')
+router.register(r'usuarios', UsuarioViewSet, basename='usuario')
 
 from .views import (
     hello, vista_login, productos_list, producto_detalle, categorias_list,

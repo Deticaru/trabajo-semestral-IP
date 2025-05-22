@@ -54,6 +54,30 @@ const AdminDashboard = () => (
           >
             Historial de Actividad
           </NavLink>
+          <NavLink
+            to="/administrator/products"
+            className="bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-800 transition"
+          >
+            Gestionar Productos
+          </NavLink>
+          <NavLink
+            to="/administrator/categories"
+            className="bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-800 transition"
+          >
+            Gestionar Categorías
+          </NavLink>
+          <NavLink
+            to="/administrator/brands"
+            className="bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-800 transition"
+          >
+            Gestionar Marcas
+          </NavLink>
+          <NavLink
+            to="/administrator/usersc"
+            className="bg-yellow-400 text-purple-900 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition"
+          >
+            Gestionar Usuarios Personal
+          </NavLink>
         </div>
       </main>
     </div>

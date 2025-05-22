@@ -153,6 +153,14 @@ class ContactoViewSet(viewsets.ModelViewSet):
     queryset = Contacto.objects.all()
     serializer_class = ContactoSerializer
 
+class TipoUsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Tipo_usuario.objects.all()
+    serializer_class = TipoUsuarioSerializer
+
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+
 #Estos metodos son mas especificos y debes operarlos manualmente
 @api_view(['GET'])
 def productos_list(request):

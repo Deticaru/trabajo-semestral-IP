@@ -53,6 +53,54 @@ const AdminPanelMenu = () => (
     >
       Actividad
     </NavLink>
+    <NavLink
+      to="/administrator/products"
+      className={({ isActive }) =>
+        `block px-4 py-2 rounded-lg font-semibold transition ${
+          isActive
+            ? "bg-purple-700 text-white"
+            : "text-purple-800 hover:bg-purple-100"
+        }`
+      }
+    >
+      Productos
+    </NavLink>
+    <NavLink
+      to="/administrator/categories"
+      className={({ isActive }) =>
+        `block px-4 py-2 rounded-lg font-semibold transition ${
+          isActive
+            ? "bg-purple-700 text-white"
+            : "text-purple-800 hover:bg-purple-100"
+        }`
+      }
+    >
+      Categorías
+    </NavLink>
+    <NavLink
+      to="/administrator/brands"
+      className={({ isActive }) =>
+        `block px-4 py-2 rounded-lg font-semibold transition ${
+          isActive
+            ? "bg-purple-700 text-white"
+            : "text-purple-800 hover:bg-purple-100"
+        }`
+      }
+    >
+      Marcas
+    </NavLink>
+    <NavLink
+      to="/administrator/usersc"
+      className={({ isActive }) =>
+        `block px-4 py-2 rounded-lg font-semibold transition ${
+          isActive
+            ? "bg-yellow-400 text-purple-900"
+            : "text-purple-800 hover:bg-yellow-100"
+        }`
+      }
+    >
+      Usuarios Personal
+    </NavLink>
   </aside>
 );
 

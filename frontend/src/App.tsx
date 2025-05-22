@@ -26,6 +26,10 @@ import AdminDashboard from "./pages/Administrator/AdminDashboard";
 import AdminUsers from "./pages/Administrator/AdminUsers";
 import AdminPromotions from "./pages/Administrator/AdminPromotions";
 import AdminActivity from "./pages/Administrator/AdminActivity";
+import AdminProducts from "./pages/Administrator/AdminProducts";
+import AdminCategories from "./pages/Administrator/AdminCategories";
+import AdminBrands from "./pages/Administrator/AdminBrands";
+import AdminUsersC from "./pages/Administrator/AdminUsersC";
 import WebpayReturn from "./pages/Cart/WebpayReturn";
 import "./App.css";
 import Checkout from "./pages/Checkout/Checkout";
@@ -61,6 +65,13 @@ function App() {
           />
           <Route path="/administrator/activity" element={<AdminActivity />} />
           <Route path="/webpay/return" element={<WebpayReturn />} />
+          <Route path="/administrator/products" element={<AdminProducts />} />
+          <Route
+            path="/administrator/categories"
+            element={<AdminCategories />}
+          />
+          <Route path="/administrator/brands" element={<AdminBrands />} />
+          <Route path="/administrator/usersC" element={<AdminUsersC />} />
         </Routes>
       </Router>
       <BackToTop />
