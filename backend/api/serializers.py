@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from .models import Producto, Categoria, Marca, ImagenProducto, Sucursal, StockSucursal, Pedido, DetalleProducto, Contacto
+
 # Marca
 class MarcaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Marca
-        fields = '__all__'
+        fields = ['id', 'nom_marca']
 
 # Sucursal
 class SucursalSerializer(serializers.ModelSerializer):
@@ -16,27 +17,37 @@ class SucursalSerializer(serializers.ModelSerializer):
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categoria
-        fields = '__all__'
+        fields = ['id', 'nom_categoria']
 
 # Imágenes
 class ImagenProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImagenProducto
-        fields = '__all__'
+        fields = ['imagen_producto', 'puesto_imagen']
 
 # Producto
 class ProductoSerializer(serializers.ModelSerializer):
-    #marca_producto = MarcaSerializer()
+    categoria = CategoriaSerializer(source='tag_producto', read_only=True)
+    marca = MarcaSerializer(source='marca_producto', read_only=True)
+    imagenes = ImagenProductoSerializer(many=True, read_only=True, source='imagenproducto_set')
+
     class Meta:
         model = Producto
-        fields = '__all__'
-        #fields = ['id', 'nom_producto', 'desc_producto', 'precio_producto', 'marca_producto']
+        fields = [
+            'id',
+            'nom_producto',
+            'desc_producto',
+            'precio_producto',
+            'categoria',
+            'marca',
+            'imagenes',
+            # agrega aquí otros campos que quieras mostrar
+        ]
 
 # Stock Sucursal
 class StockSucursalSerializer(serializers.ModelSerializer):
     sucursal = SucursalSerializer()
     class Meta:
-        
         model = StockSucursal
         fields = '__all__'
 
@@ -51,8 +62,8 @@ class PedidoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pedido
         fields = '__all__'
-    
-#Contacto
+
+# Contacto
 class ContactoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contacto

@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import styled from "styled-components";
-import { products } from "../../data/products";
 import { useCart } from "../../context/CartContext";
 
 const Product = () => {
@@ -14,8 +13,11 @@ const Product = () => {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    const found = products.find((p) => p.id === id);
-    setProduct(found || null);
+    if (!id) return;
+    fetch(`http://localhost:8000/api/productos/${id}/`)
+      .then((res) => res.json())
+      .then((data) => setProduct(data))
+      .catch(() => setProduct(null));
   }, [id]);
 
   if (!product) return null;
@@ -26,16 +28,35 @@ const Product = () => {
       <ContentWrapper>
         <ProductContainer>
           <ImageSection>
-            <ProductImage src={product.image} alt={product.title} />
+            <ProductImage
+              src={
+                product.imagenes && product.imagenes.length > 0
+                  ? product.imagenes[0].imagen_producto
+                  : ""
+              }
+              alt={product.nom_producto}
+            />
           </ImageSection>
           <InfoSection>
-            <h1>{product.title}</h1>
-            <Category>Categoria: {product.category}</Category>
-            <Sku>SKU: {product.sku}</Sku>
-            <Stock>Unidades disponibles: {product.stock}</Stock>
-            <Price>${product.price.toLocaleString()}</Price>
-            <ShortDesc>{product.description}</ShortDesc>
-            <LongDesc>{product.longDescription}</LongDesc>
+            <h1>{product.nom_producto}</h1>
+            <Category>
+              Categoría:{" "}
+              {product.categoria
+                ? product.categoria.nom_categoria
+                : "Sin categoría"}
+            </Category>
+            <Marca>
+              Marca: {product.marca ? product.marca.nom_marca : "Sin marca"}
+            </Marca>
+            <Sku>SKU: {product.sku ? product.sku : "N/A"}</Sku>
+            <Stock>
+              Unidades disponibles: {product.stock ? product.stock : "N/A"}
+            </Stock>
+            <Price>${Number(product.precio_producto).toLocaleString()}</Price>
+            <ShortDesc>{product.desc_producto}</ShortDesc>
+            <LongDesc>
+              {product.descripcion_larga ? product.descripcion_larga : ""}
+            </LongDesc>
             <Actions>
               <Counter>
                 <CounterButton
@@ -53,13 +74,17 @@ const Product = () => {
                 onClick={() =>
                   addToCart({
                     id: product.id,
-                    title: product.title,
-                    image: product.image,
-                    price: product.price,
+                    title: product.nom_producto,
+                    image:
+                      product.imagenes && product.imagenes.length > 0
+                        ? product.imagenes[0].imagen_producto
+                        : "",
+                    price: product.precio_producto,
                     quantity,
                   })
                 }
               >
+                {/* ...icono SVG... */}
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -221,6 +246,12 @@ const AddButton = styled.button`
   &:hover {
     background: #7c1622;
   }
+`;
+
+const Marca = styled.div`
+  color: #a51d2d;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
 `;
 
 export default Product;
