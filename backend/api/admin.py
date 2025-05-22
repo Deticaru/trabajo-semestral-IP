@@ -25,7 +25,6 @@ from .models import (
 # Register your models here.
 # Despues usar python manage.py makemigrations y python manage.py migrate
 admin.site.register(Tipo_usuario)
-admin.site.register(Usuario)
 admin.site.register(Marca)
 admin.site.register(Categoria)
 admin.site.register(Producto)

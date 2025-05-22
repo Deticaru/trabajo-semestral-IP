@@ -1,7 +1,7 @@
 # urls.py
 from rest_framework.routers import DefaultRouter
 from django.urls import path
-from .views import ProductoViewSet, CategoriaViewSet
+from .views import *
 
 # Incluir los nuevos endpoints
 # Ejemplo (npm run dev) http://localhost:8000/api/productos/
