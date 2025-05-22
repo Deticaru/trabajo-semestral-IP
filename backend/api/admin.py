@@ -44,3 +44,9 @@ admin.site.register(Banco)
 admin.site.register(TipoPago)
 admin.site.register(PagoPedido)
 admin.site.register(Contacto)
+
+class UsuarioAdmin(admin.ModelAdmin):
+    list_display = ('correo_usuario', 'nom_usuario', 'telefono_usuario', 'tipo_usuario', 'recibe_ofertas')
+    search_fields = ('correo_usuario', 'nom_usuario')
+
+admin.site.register(Usuario, UsuarioAdmin)

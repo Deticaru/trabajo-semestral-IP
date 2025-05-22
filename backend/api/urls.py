@@ -17,6 +17,8 @@ from .views import (
 urlpatterns = [
     path('hello/', hello),
     path('login/', vista_login),
+    path('registrar/', registrar_usuario, name='registrar_usuario'),
+    path('profile/', profile, name='profile'),
     #path('productos/', productos_list),
     #path('productos/<str:codigo>/', producto_detalle),
     #path('categorias/', categorias_list),

@@ -26,6 +26,8 @@ class UsuarioManager(BaseUserManager):
         if not telefono_usuario:
             raise ValueError('El teléfono es obligatorio')
         email = self.normalize_email(correo_usuario)
+        # Asegura que los usuarios normales no sean staff por defecto
+        extra_fields.setdefault('is_staff', False)
         user = self.model(
             nom_usuario=nom_usuario, 
             correo_usuario=email,
@@ -63,6 +65,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     recibe_ofertas      = models.BooleanField(default=False, verbose_name='Recibe Ofertas')
     telefono_usuario    = models.CharField(max_length=20, verbose_name='Teléfono Usuario')
     tipo_usuario        = models.ForeignKey(Tipo_usuario, on_delete=models.PROTECT, verbose_name='Tipo Usuario')
+    dir_usuario         = models.CharField(max_length=255, verbose_name='Dirección Usuario', null=True, blank=True)
     is_active           = models.BooleanField(default=True)
     is_staff            = models.BooleanField(default=True)
 

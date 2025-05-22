@@ -122,6 +122,29 @@ const Login: React.FC = () => {
     }
   };
 
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/registrar/", {
+        nom_usuario: nombre_usuario,
+        correo_usuario,
+        telefono_usuario: inputValue,
+        password,
+        recibe_ofertas: (document.getElementById('feed') as HTMLInputElement)?.checked || false,
+      });
+      if (response.data.success) {
+        alert('Usuario registrado correctamente');
+        setisLoggingIn(true);
+        setRegisterVisible(false);
+        setLoginVisible(true);
+      } else {
+        setError(response.data.error || 'Error al registrar usuario');
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Error al registrar usuario');
+    }
+  };
+
   if (loading) return <div className="loading">Cargando...</div>;
 
   return (
@@ -174,6 +197,9 @@ const Login: React.FC = () => {
                 </div>
                 {/* CONTRASEÑA FIN */}
                 <br />
+                {error && (
+                  <div className="text-red-500 font-semibold mb-2">Datos inválidos: correo o contraseña incorrectos.</div>
+                )}
                 <button type="submit" className="sign">Iniciar Sesión</button>
               </form>
               {/* FORM */}
@@ -197,7 +223,7 @@ const Login: React.FC = () => {
               <p className="title">Registrarse</p>
 
               {/* FORM */}
-              <form className="form" onSubmit={handleLogin}>
+              <form className="form" onSubmit={handleRegister}>
                 {/* NOMBRE */}
                 <div className="input-group">
                   <label htmlFor="nombrecom">Nombre</label>
