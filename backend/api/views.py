@@ -9,6 +9,9 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Usuario, Tipo_usuario
 from django.contrib.auth.hashers import make_password
 import json
+from .webpay_config import get_webpay_transaction
+
+tx = get_webpay_transaction()
 
 @api_view(['GET'])
 def hello(request):
@@ -86,4 +89,23 @@ def profile(request):
             return Response({'success': True, 'msg': 'Datos actualizados correctamente'})
         else:
             return Response({'success': False, 'msg': 'No hay cambios para actualizar'}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def webpay_create_transaction(request):
+    data = request.data
+    buy_order = data.get('buy_order')
+    session_id = data.get('session_id')
+    amount = data.get('amount')
+    return_url = data.get('return_url')
+
+    tx = get_webpay_transaction()
+    resp = tx.create(buy_order, session_id, amount, return_url)
+    return Response({'url': resp['url'], 'token': resp['token']})
+
+@api_view(['POST'])
+def webpay_commit_transaction(request):
+    token = request.data.get('token_ws')
+    tx = get_webpay_transaction()
+    resp = tx.commit(token)
+    return Response(resp)
 # Create your views here.

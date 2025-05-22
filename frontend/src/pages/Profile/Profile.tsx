@@ -274,7 +274,7 @@ const StyledWrapper = styled.div`
     width: 120px;
     border-radius: 10px;
     transition-duration: 0.3s;
-    background-color: rgb(255, 69, 69);
+    background-color: #a51d2d;
     align-items: center;
   }
   .edit-button:hover .edit-svgIcon {
@@ -289,7 +289,7 @@ const StyledWrapper = styled.div`
   }
   .edit-button::before {
     display: none;
-    content: "Edit";
+    content: "Editar";
     color: white;
     transition-duration: 0.3s;
     font-size: 2px;

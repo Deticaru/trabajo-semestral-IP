@@ -66,6 +66,7 @@ const Login: React.FC = () => {
     }
   };
 
+
   const handleRegisterClick = () => {
     setLoginVisible(false);
     setTimeout(() => {

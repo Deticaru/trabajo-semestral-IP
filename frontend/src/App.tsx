@@ -26,7 +26,9 @@ import AdminDashboard from "./pages/Administrator/AdminDashboard";
 import AdminUsers from "./pages/Administrator/AdminUsers";
 import AdminPromotions from "./pages/Administrator/AdminPromotions";
 import AdminActivity from "./pages/Administrator/AdminActivity";
+import WebpayReturn from "./pages/Cart/WebpayReturn";
 import "./App.css";
+import Checkout from "./pages/Checkout/Checkout";
 
 function App() {
   return (
@@ -41,6 +43,7 @@ function App() {
           <Route path="/product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/seller" element={<SellerDashboard />} />
           <Route path="/seller/inventory" element={<SellerInventory />} />
           <Route path="/seller/orders" element={<SellerOrders />} />
@@ -57,6 +60,7 @@ function App() {
             element={<AdminPromotions />}
           />
           <Route path="/administrator/activity" element={<AdminActivity />} />
+          <Route path="/webpay/return" element={<WebpayReturn />} />
         </Routes>
       </Router>
       <BackToTop />

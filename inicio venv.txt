@@ -48,6 +48,7 @@ pip install django-cors-headers
 pip install djangorestframework-simplejwt
 pip install django djangorestframework
 pip install django-cors-headers
+pip install transbank-sdk
 
 ### Instalación requerimientos (ya está en front)
 npm install react-router-dom
