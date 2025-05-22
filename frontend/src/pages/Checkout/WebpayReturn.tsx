@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const WebpayReturn = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -11,6 +12,15 @@ const WebpayReturn = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token_ws = params.get("token_ws") || (document.forms[0]?.token_ws?.value ?? "");
+    const tbk_token = params.get("TBK_TOKEN");
+    const tbk_order = params.get("TBK_ORDEN_COMPRA");
+    const tbk_session = params.get("TBK_ID_SESION");
+
+    // Si viene de anulación Webpay
+    if (tbk_token && tbk_order && tbk_session) {
+      navigate("/checkout/webpay-cancelled");
+      return;
+    }
     if (!token_ws) {
       setError("No se recibió token_ws");
       setLoading(false);

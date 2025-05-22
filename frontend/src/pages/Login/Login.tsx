@@ -25,7 +25,14 @@ const Login: React.FC = () => {
 
   // FONDO
   useEffect(() => {
-    
+    // Check for session expiration redirect
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("expired") === "1") {
+      setError("Tu sesión ha expirado por inactividad. Por favor, inicia sesión nuevamente.");
+      // Remove the param from URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     document.title = "Iniciar Sesión";
     document.body.classList.add("login-page");
     

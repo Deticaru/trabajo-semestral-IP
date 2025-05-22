@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import { useCart } from "../../context/CartContext";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../Login/Login.css";
 
 const Checkout = () => {
-  const { cart, clearCart } = useCart();
-  const navigate = useNavigate();
+  const { cart } = useCart();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -18,6 +17,7 @@ const Checkout = () => {
   const [addressType, setAddressType] = useState<"my" | "other">("my");
   const [customAddress, setCustomAddress] = useState("");
   const [fade, setFade] = useState("fade-in");
+  const [loading, setLoading] = useState(false);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -45,8 +45,9 @@ const Checkout = () => {
     setCustomAddress(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     if (!form.name || !form.email) {
       setError("Por favor completa todos los campos obligatorios.");
       return;
@@ -55,9 +56,35 @@ const Checkout = () => {
       setError("Por favor ingresa la dirección de despacho.");
       return;
     }
-    // Aquí podrías enviar los datos al backend o continuar con el flujo de pago
-    clearCart();
-    navigate("/success");
+    if (cart.length === 0) return;
+    setLoading(true);
+    try {
+      // Prepare order data
+      const orderData = {
+        buy_order: `ORD-${Date.now()}`,
+        session_id: form.email,
+        amount: total,
+        return_url: `${window.location.origin}/checkout/webpay-return`,
+        // Optionally, send more info (user, address, cart, etc)
+      };
+      const res = await axios.post("http://localhost:8000/api/webpay/create/", orderData);
+      const { url, token } = res.data;
+      // Create and submit form to Webpay
+      const formEl = document.createElement("form");
+      formEl.method = "POST";
+      formEl.action = url;
+      formEl.style.display = "none";
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "token_ws";
+      input.value = token;
+      formEl.appendChild(input);
+      document.body.appendChild(formEl);
+      formEl.submit();
+    } catch (err: any) {
+      setError("Error al iniciar el pago. Intenta nuevamente.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -175,9 +202,9 @@ const Checkout = () => {
             <button
               type="submit"
               className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-3 rounded transition"
-              disabled={cart.length === 0}
+              disabled={cart.length === 0 || loading}
             >
-              Realizar pedido
+              {loading ? "Redirigiendo a Webpay..." : "Realizar pedido"}
             </button>
           </form>
         </div>

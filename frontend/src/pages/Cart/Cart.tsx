@@ -4,44 +4,12 @@ import Footer from "../../components/Footer/Footer";
 import CartItem from "../../components/CartItem/CartItem";
 import { useCart } from "../../context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const Cart = () => {
   const { cart, clearCart } = useCart();
   const navigate = useNavigate();
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-  const handleCheckout = async () => {
-    if (cart.length === 0) return;
-    const buy_order = `order_${Date.now()}`;
-    const session_id = `session_${Date.now()}`;
-    const amount = total;
-    const return_url = `${window.location.origin}/webpay/return`;
-    try {
-      const res = await axios.post("http://localhost:8000/api/webpay/create/", {
-        buy_order,
-        session_id,
-        amount,
-        return_url,
-      });
-      const { url, token } = res.data;
-      // Crear y enviar formulario POST a Webpay
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = url;
-      form.style.display = "none";
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = "token_ws";
-      input.value = token;
-      form.appendChild(input);
-      document.body.appendChild(form);
-      form.submit();
-    } catch (err) {
-      alert("Error al iniciar el pago");
-    }
-  };
 
   return (
     <>
@@ -83,10 +51,10 @@ const Cart = () => {
               </div>
               <div className="mt-8 text-right">
                 <button
-                  className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-3 rounded transition"
-                  onClick={handleCheckout}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded transition"
+                  onClick={() => navigate("/checkout")}
                 >
-                  Realizar compra
+                  Siguiente
                 </button>
               </div>
             </>

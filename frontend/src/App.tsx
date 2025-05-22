@@ -26,11 +26,51 @@ import AdminDashboard from "./pages/Administrator/AdminDashboard";
 import AdminUsers from "./pages/Administrator/AdminUsers";
 import AdminPromotions from "./pages/Administrator/AdminPromotions";
 import AdminActivity from "./pages/Administrator/AdminActivity";
-import WebpayReturn from "./pages/Cart/WebpayReturn";
+import WebpayReturn from "./pages/Checkout/WebpayReturn";
+import WebpayCancelled from "./pages/Checkout/WebpayCancelled";
 import "./App.css";
 import Checkout from "./pages/Checkout/Checkout";
+import React, { useEffect } from "react";
 
 function App() {
+  // Session expiration logic
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    let warningTimer: ReturnType<typeof setTimeout>;
+    const EXPIRATION_MINUTES = 30;
+    const WARNING_MINUTES = 29.5; // Show warning 30 seconds before
+
+    const resetTimer = () => {
+      clearTimeout(timer);
+      clearTimeout(warningTimer);
+      // Warning before logout
+      warningTimer = setTimeout(() => {
+        if (localStorage.getItem("access_token")) {
+          alert(
+            "Por seguridad, tu sesión expirará en 30 segundos por inactividad."
+          );
+        }
+      }, WARNING_MINUTES * 60 * 1000);
+      // Actual logout
+      timer = setTimeout(() => {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        delete (window as any).axios?.defaults?.headers?.common["Authorization"];
+        window.location.href = "/login?expired=1";
+      }, EXPIRATION_MINUTES * 60 * 1000);
+    };
+
+    // Reset timer on user activity
+    const events = ["mousemove", "keydown", "mousedown", "touchstart"];
+    events.forEach((event) => window.addEventListener(event, resetTimer));
+    resetTimer();
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(warningTimer);
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+    };
+  }, []);
+
   return (
     <CartProvider>
       <Router>
@@ -61,6 +101,11 @@ function App() {
           />
           <Route path="/administrator/activity" element={<AdminActivity />} />
           <Route path="/webpay/return" element={<WebpayReturn />} />
+          <Route path="/checkout/webpay-return" element={<WebpayReturn />} />
+          <Route
+            path="/checkout/webpay-cancelled"
+            element={<WebpayCancelled />}
+          />
         </Routes>
       </Router>
       <BackToTop />
