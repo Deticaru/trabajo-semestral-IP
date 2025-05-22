@@ -44,6 +44,7 @@ python manage.py createsuperuser
 ### contraseña: admin
 
 ### Instalación requerimiento (YA ESTÁN EN requirements.txt)
+### pip freeze > requirements.txt Esto actualizará tu requirements.txt con todas las librerías instaladas
 pip install django-cors-headers
 pip install djangorestframework-simplejwt
 pip install django djangorestframework
