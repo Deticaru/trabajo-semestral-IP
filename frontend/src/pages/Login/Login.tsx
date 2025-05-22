@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import axios from "axios";
 import styled from 'styled-components';
 import LogoLogin from "../../assets/images/login-banner-2000-slim-v3.png"
@@ -18,15 +18,20 @@ const Login: React.FC = () => {
   const [loginVisible, setLoginVisible] = useState(true);
   const [registerVisible, setRegisterVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  
+  const location = useLocation();
+  const [fromCart, setFromCart] = useState(false);
   
   // el error aquí es para quitar un mensaje de alerta de vscode, pero si es necesario la const 'error'
   error;
 
   // FONDO
   useEffect(() => {
+    
     // Check for session expiration redirect
     const params = new URLSearchParams(window.location.search);
+    const nextParam = params.get("next");
+    setFromCart(nextParam === "/checkout");
+
     if (params.get("expired") === "1") {
       setError("Tu sesión ha expirado por inactividad. Por favor, inicia sesión nuevamente.");
       // Remove the param from URL
@@ -62,7 +67,7 @@ const Login: React.FC = () => {
       document.body.style.backgroundPosition = "";
       document.body.style.backgroundRepeat = "";
     };
-  }, []);
+  }, [location.search]);;
 
   const Logging = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -118,7 +123,7 @@ const Login: React.FC = () => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${access}`;
 
       alert("¡Login Exitoso!");
-      navigate("/Home");
+      navigate(fromCart ? "/cart" : "/Home");
       const root = document.getElementById("root");
       document.body.classList.remove("login-page");
       if (root) {
@@ -169,9 +174,7 @@ const Login: React.FC = () => {
                   <button
                     className="bg-white text-center w-35 rounded-2xl h-12 relative text-white text-xl font-semibold group"
                     type="button"
-                    onClick={() => {
-                      navigate("/Home");
-                    }}
+                    onClick={() => navigate(fromCart ? "/cart" : "/Home")}
                   >
                     <div className="bg-red-800 rounded-xl h-10 w-1/4 flex items-center justify-center absolute left-1 top-[3px] group-hover:w-[130px] z-10 duration-600">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="25px" width="25px">

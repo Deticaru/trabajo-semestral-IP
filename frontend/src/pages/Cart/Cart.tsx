@@ -11,6 +11,15 @@ const Cart = () => {
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  const handleNext = () => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      navigate("/checkout");
+    } else {
+      navigate("/login?next=/checkout");
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -52,7 +61,7 @@ const Cart = () => {
               <div className="mt-8 text-right">
                 <button
                   className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded transition"
-                  onClick={() => navigate("/checkout")}
+                  onClick={handleNext}
                 >
                   Siguiente
                 </button>
