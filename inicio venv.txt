@@ -63,3 +63,8 @@ npm install styled-components
 #Api documentada
 http://localhost:8000/swagger/
 http://localhost:8000/redoc/
+
+#Visualizar Tablas en Workbench Mysql
+USE test_msql;
+SHOW TABLES;
+SELECT * FROM api_producto;  
