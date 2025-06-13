@@ -153,11 +153,14 @@ class EstadoPedido(models.Model):
 
 class Pedido(models.Model):
     fecha_pedido    = models.DateField(verbose_name='Fecha del Pedido')
+    fecha_creacion  = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de Creación')
     total_pedido    = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Total del Pedido')
     estado_pedido   = models.ForeignKey(EstadoPedido, on_delete=models.PROTECT, verbose_name='Estado del Pedido')
     usuario         = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Usuario") # settings.AUTH_USER_MODEL hace referencia al modelo Usuario personalizado
     def __str__(self):
-        return f"Pedido {self.id} - {self.estado_pedido}"
+        # Muestra la fecha de creación en formato legible para el admin
+        fecha_str = self.fecha_creacion.strftime('%d/%m/%Y %H:%M') if self.fecha_creacion else ''
+        return f"Pedido {self.id} - {self.estado_pedido} - {fecha_str}"
 
 class DetalleProducto(models.Model):
     cantidad_productos  = models.PositiveIntegerField(verbose_name='Cantidad de Productos')

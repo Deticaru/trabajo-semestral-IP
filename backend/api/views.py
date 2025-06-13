@@ -253,12 +253,13 @@ def guardar_carrito(request):
     if not cart:
         return Response({'error': 'El carrito está vacío'}, status=400)
     try:
-        estado_pendiente = EstadoPedido.objects.get(nombre_estado_pedido='Pago pendiente')
+        # Obtener o crear el estado 'Pago pendiente'
+        estado_pendiente, _ = EstadoPedido.objects.get_or_create(nombre_estado_pedido='Pago pendiente')
         pedido = Pedido.objects.create(
             usuario=request.user,
             estado_pedido=estado_pendiente,
             fecha_pedido=timezone.now().date(),
-            total_pedido=sum(item.get('price', 0) * item.get('quantity', 0) for item in cart)
+            total_pedido=sum(float(item.get('price', 0)) * int(item.get('quantity', 0)) for item in cart)
         )
         for item in cart:
             producto_id = item.get('id')
@@ -270,8 +271,8 @@ def guardar_carrito(request):
             DetalleProducto.objects.create(
                 pedido=pedido,
                 producto=producto,  # Usa la instancia, no el id
-                cantidad_productos=cantidad,
-                subtotal_producto=item.get('price', 0) * cantidad
+                cantidad_productos=int(cantidad),
+                subtotal_producto=float(item.get('price', 0)) * int(cantidad)
             )
         return Response({'pedido_id': pedido.id, 'status': 'Carrito guardado'})
     except Exception as e:

@@ -1,54 +1,6 @@
 
 ### AMBIENTE VIRTUAL
-python -m venv env
-cd env
-cd scripts
-./activate
-cd..
-cd..
-### INSTALACIÓN DE REQUERIMIENTOS
-npm install --save-dev npm-run-all ##NECESARIO PARA FRONT
-pip install -r requirements.txt
-##### FIN AMBIENTE VIRTUAL
-
-### AMBIENTE VIRTUAL 2 (LINUX)
-python3 -m venv env
-source env/bin/activate
-pip install -r requirements.txt
-##
-
-## INICIO DE PROYECTO (BACKEND)
-django-admin startproject backend
-cd backend
-python manage.py startapp api
-####
-
-# OTRA INSTALACIÓN (está ya dentro de los requirements)
-
-###
-
-## INICIO DE PROYECTO (FRONT)
-npm create vite@latest frontend --template react
-## >>> ELEGIR >>
-## React
-## Typescript
-cd frontend
-npm install
-npm run dev
-
-### INSTALAR REQUERIMIENTO QUE PERMITE UTILIZAR 1 TERMINAL PARA CORRER REACT+DJANGO (ESTÁ DENTRO DEL FRONT)
-
-### CREACIÓN DE ADMIN PARA PROCESOS INTERNOS
-python manage.py createsuperuser
-### nombre:     admin
-### contraseña: admin
-
-### Instalación requerimiento (YA ESTÁN EN requirements.txt)
-### pip freeze > requirements.txt Esto actualizará tu requirements.txt con todas las librerías instaladas
-pip install django-cors-headers
-pip install djangorestframework-simplejwt
-pip install django djangorestframework
-pip install django-cors-headers
+python -m venv envcd env cd scripts ./activate cd..  cd..  ### INSTALACIÓN DE REQUERIMIENTOS npm install --save-dev npm-run-all ##NECESARIO PARA FRONT pip install -r requirements.txt ##### FIN AMBIENTE VIRTUAL ### AMBIENTE VIRTUAL 2 (LINUX) python3 -m venv env source env/bin/activate pip install -r requirements.txt ## ## INICIO DE PROYECTO (BACKEND) django-admin startproject backend cd backend python manage.py startapp api #### # OTRA INSTALACIÓN (está ya dentro de los requirements) ### ## INICIO DE PROYECTO (FRONT) npm create vite@latest frontend --template react ## >>> ELEGIR >> ## React ## Typescript cd frontend npm install npm run dev ### INSTALAR REQUERIMIENTO QUE PERMITE UTILIZAR 1 TERMINAL PARA CORRER REACT+DJANGO (ESTÁ DENTRO DEL FRONT) ### CREACIÓN DE ADMIN PARA PROCESOS INTERNOS python manage.py createsuperuser ### nombre:     admin ### contraseña: admin ### Instalación requerimiento (YA ESTÁN EN requirements.txt) ### pip freeze > requirements.txt Esto actualizará tu requirements.txt con todas las librerías instaladas pip install django-cors-headers pip install djangorestframework-simplejwt pip install django djangorestframework pip install django-cors-headers
 pip install transbank-sdk
 pip install drf-yasg
 
