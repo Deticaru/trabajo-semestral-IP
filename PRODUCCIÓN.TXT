@@ -1,0 +1,3 @@
+# Usar cron job para ejecutar éste script cada 5 minutos.
+# es para manejar la expiración de pedidos (15 min).
+python manage.py expirar_pedidos
