@@ -26,4 +26,4 @@ jobs:
     - name: Ejecutar pruebas con pytest
       run: |
         cd backend
-        pytest
+        pytest ../tests
