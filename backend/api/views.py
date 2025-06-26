@@ -23,17 +23,17 @@ from rest_framework.response import Response
 
 tx = get_webpay_transaction()
 
-@api_view(['GET'])
-def hello(request):
-    return Response({"message": "Hola desde Djando API"})
+# @api_view(['GET'])
+# def hello(request):
+#     return Response({"message": "Hola desde Djando API"})
 
-@api_view(['GET'])
-def productos(request):
-    data = [
-        {"id": 1, "nombre": "Camisa", "precio": 15000},
-        {"id": 2, "nombre": "Pantalón", "precio": 25000},
-    ]
-    return Response(data)
+# @api_view(['GET'])
+# def productos(request):
+#     data = [
+#         {"id": 1, "nombre": "Camisa", "precio": 15000},
+#         {"id": 2, "nombre": "Pantalón", "precio": 25000},
+#     ]
+#     return Response(data)
 
 @csrf_exempt
 def vista_login(request):

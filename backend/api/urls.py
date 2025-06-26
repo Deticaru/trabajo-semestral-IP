@@ -13,12 +13,11 @@ router.register(r'tipo_usuario', TipoUsuarioViewSet, basename='tipo_usuario')
 router.register(r'usuarios', UsuarioViewSet, basename='usuario')
 
 from .views import (
-    hello, vista_login, productos_list, producto_detalle, categorias_list,
+    vista_login, productos_list, producto_detalle, categorias_list,
     sucursal_stock, realizar_pedido, contacto, moneda_convertir, webpay_commit
 )
 
 urlpatterns = [
-    path('hello/', hello),
     path('login/', vista_login),
     path('webpay/create/', webpay_create_transaction),
     path('webpay/commit/', webpay_commit),
@@ -32,5 +31,6 @@ urlpatterns = [
     path('pedidos/', realizar_pedido),
     path('contacto/', contacto),
     path('moneda/convertir/', moneda_convertir),
+    path('productos', productos_list),
 ]
 urlpatterns += router.urls  # Esta línea agrega las rutas generadas por el router
