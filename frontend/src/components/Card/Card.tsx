@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
@@ -20,7 +20,19 @@ const Card: React.FC<CardProps> = ({
 }) => {
   const [quantity, setQuantity] = useState(1);
   const [clicked, setClicked] = useState(false); // Estado para animación
+  const [stock, setStock] = useState<number | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const sucursal = JSON.parse(localStorage.getItem("sucursal") || '{"id":1}');
+    fetch(`/api/stock/${sucursal.id}/?producto=${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        // Ajusta según la respuesta de tu API
+        if (Array.isArray(data) && data.length > 0) setStock(data[0].stock);
+        else setStock(0);
+      });
+  }, [id]);
 
   const handleDecrease = () => {
     setQuantity((q) => (q > 1 ? q - 1 : 1));
@@ -124,6 +136,9 @@ const Card: React.FC<CardProps> = ({
           </style>
         </div>
       </Actions>
+      <div style={{ marginTop: "0.5rem", color: "#555", fontSize: "0.95rem" }}>
+        Stock en sucursal: {stock === null ? "Cargando..." : stock}
+      </div>
     </CardWrapper>
   );
 };
