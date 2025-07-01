@@ -3,15 +3,6 @@ import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 
-const SUCURSALES = [
-  { id: 1, nombre: "Viña del Mar" },
-  { id: 2, nombre: "Santiago" },
-  { id: 3, nombre: "Valparaíso" },
-  // ...agrega las sucursales reales...
-];
-
-const DEFAULT_SUCURSAL = { id: 1, nombre: "Viña del Mar" };
-
 const Navbar = () => {
   const linkStyle = "px-3 py-2 rounded-md text-sm font-medium";
   const activeStyle = "text-white";
@@ -19,7 +10,13 @@ const Navbar = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sucursal, setSucursal] = useState(DEFAULT_SUCURSAL);
+  const [sucursales, setSucursales] = useState<
+    { id: number; nom_sucursal: string }[]
+  >([]);
+  const [sucursal, setSucursal] = useState<{
+    id: number;
+    nom_sucursal: string;
+  } | null>(null);
   const navigate = useNavigate();
 
   const { cart, animateCart } = useCart();
@@ -31,9 +28,20 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    const stored = localStorage.getItem("sucursal");
-    if (stored) setSucursal(JSON.parse(stored));
-    else localStorage.setItem("sucursal", JSON.stringify(DEFAULT_SUCURSAL));
+    // Fetch sucursales desde la API
+    fetch("http://localhost:8000/api/sucursales/")
+      .then((res) => res.json())
+      .then((data) => {
+        setSucursales(data);
+        // Si no hay sucursal en localStorage, setear la primera como default
+        const stored = localStorage.getItem("sucursal");
+        if (stored) {
+          setSucursal(JSON.parse(stored));
+        } else if (data.length > 0) {
+          setSucursal(data[0]);
+          localStorage.setItem("sucursal", JSON.stringify(data[0]));
+        }
+      });
   }, []);
 
   const handleLogout = () => {
@@ -50,11 +58,11 @@ const Navbar = () => {
   };
 
   const handleSucursalChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = SUCURSALES.find((s) => s.id === Number(e.target.value));
+    const selected = sucursales.find((s) => s.id === Number(e.target.value));
     if (selected) {
       setSucursal(selected);
       localStorage.setItem("sucursal", JSON.stringify(selected));
-      window.location.reload(); // Opcional: recarga para actualizar stock en catálogo
+      window.location.reload();
     }
   };
 
@@ -193,13 +201,13 @@ const Navbar = () => {
             </div>
           </NavLink>
           <select
-            value={sucursal.id}
+            value={sucursal?.id || ""}
             onChange={handleSucursalChange}
             className="ml-4 px-3 py-2 rounded-md text-sm font-medium bg-white text-red-800 border border-white"
           >
-            {SUCURSALES.map((s) => (
+            {sucursales.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.nombre}
+                {s.nom_sucursal}
               </option>
             ))}
           </select>
