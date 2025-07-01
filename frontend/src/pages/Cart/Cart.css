@@ -1,0 +1,13 @@
+.disButton {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  pointer-events: none;
+  background-color: #94a3b8 !important; /* gris suave */
+  color: #fff !important;
+  box-shadow: none !important;
+  transition: none !important;
+}
+
+.btn-next {
+  cursor: pointer;
+}

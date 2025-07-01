@@ -4,9 +4,10 @@ import { useCart } from "../../context/CartContext";
 
 type Props = {
   item: CartItemType;
+  maxStock?: number;
 };
 
-const CartItem: React.FC<Props> = ({ item }) => {
+const CartItem: React.FC<Props> = ({ item, maxStock }) => {
   const { updateQuantity, removeFromCart } = useCart();
 
   return (
@@ -21,7 +22,7 @@ const CartItem: React.FC<Props> = ({ item }) => {
         <p className="text-red-700 font-bold">${item.price.toLocaleString()}</p>
         <div className="flex items-center mt-2 gap-2">
           <button
-            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
             onClick={() => updateQuantity(item.id, item.quantity - 1)}
             disabled={item.quantity <= 1}
           >
@@ -29,8 +30,13 @@ const CartItem: React.FC<Props> = ({ item }) => {
           </button>
           <span className="px-2">{item.quantity}</span>
           <button
-            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+            className={`px-2 py-1 bg-gray-200 rounded${
+              maxStock !== undefined && item.quantity >= maxStock
+                ? " opacity-50 cursor-not-allowed hover:bg-gray-200"
+                : " hover:bg-gray-300 cursor-pointer"
+            }`}
             onClick={() => updateQuantity(item.id, item.quantity + 1)}
+            disabled={maxStock !== undefined && item.quantity >= maxStock}
           >
             +
           </button>

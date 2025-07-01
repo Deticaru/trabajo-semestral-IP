@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { useCart } from "../../context/CartContext";
 
 const Catalog = () => {
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,6 +20,7 @@ const Catalog = () => {
     marca: "",
   });
   const [clickedId, setClickedId] = useState<number | null>(null);
+  const [productStocks, setProductStocks] = useState<{ [key: string]: number }>({});
 
   // Traer categorías
   useEffect(() => {
@@ -38,6 +39,32 @@ const Catalog = () => {
       })
       .catch(() => setLoading(false));
   }, []);
+
+  // Consultar stock de cada producto después de obtenerlos
+  useEffect(() => {
+    if (products.length === 0) return;
+    const sucursal = JSON.parse(localStorage.getItem("sucursal") || '{"id":1}');
+    const fetchStocks = async () => {
+      const stocks: { [key: string]: number } = {};
+      await Promise.all(
+        products.map(async (product) => {
+          try {
+            const res = await fetch(`http://localhost:8000/api/stocksucursal/?sucursal=${sucursal.id}&producto=${product.id}`);
+            if (!res.ok) {
+              stocks[product.id] = 0;
+              return;
+            }
+            const data = await res.json();
+            stocks[product.id] = Array.isArray(data) && data.length > 0 ? data[0].stock : 0;
+          } catch {
+            stocks[product.id] = 0;
+          }
+        })
+      );
+      setProductStocks(stocks);
+    };
+    fetchStocks();
+  }, [products]);
 
   // Manejar cambios en los filtros
   const handleFilterChange = (
@@ -108,6 +135,8 @@ const Catalog = () => {
         .includes(filters.marca.toLowerCase())
     )
       return false;
+    // Filtro por stock
+    if (productStocks[product.id] === 0 || productStocks[product.id] === undefined || productStocks[product.id] === null) return false;
     return true;
   });
 
@@ -143,6 +172,8 @@ const Catalog = () => {
                       ? product.imagenes[0].imagen_producto
                       : `http://localhost:8000${product.imagenes[0].imagen_producto}`
                     : "";
+                const cartItem = cart.find((item) => item.id === product.id);
+                const cartQuantity = cartItem ? cartItem.quantity : 0;
                 return (
                   <Card
                     key={product.id}
@@ -151,6 +182,7 @@ const Catalog = () => {
                     title={product.nom_producto}
                     description={product.desc_producto}
                     price={product.precio_producto}
+                    cartQuantity={cartQuantity}
                   />
                 );
               })

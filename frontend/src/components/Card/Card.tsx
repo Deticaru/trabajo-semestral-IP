@@ -9,6 +9,7 @@ type CardProps = {
   title: string;
   description: string;
   price: string | number;
+  cartQuantity?: number; // cantidad de este producto en el carrito
 };
 
 const Card: React.FC<CardProps> = ({
@@ -17,6 +18,7 @@ const Card: React.FC<CardProps> = ({
   title,
   description,
   price,
+  cartQuantity = 0,
 }) => {
   const [quantity, setQuantity] = useState(1);
   const [clicked, setClicked] = useState(false); // Estado para animación
@@ -28,41 +30,38 @@ const Card: React.FC<CardProps> = ({
     fetch(`http://localhost:8000/api/stocksucursal/?sucursal=${sucursal.id}&producto=${id}`)
       .then(async (res) => {
         if (!res.ok) {
-          // Solo lee el body una vez aquí si hay error
           const text = await res.text();
           console.error("Respuesta no OK:", res.status, text);
           setStock(0);
           return;
         }
-        // Aquí solo intenta parsear como JSON
         try {
           const data = await res.json();
-          console.log("Respuesta JSON de stocksucursal:", data); // <-- log del resultado
           if (Array.isArray(data) && data.length > 0) setStock(data[0].stock);
           else setStock(0);
         } catch (e) {
-          // Si falla el parseo, no intentes leer el body de nuevo
-          console.error("Error al parsear JSON:");
           setStock(0);
         }
       })
-      .catch((err) => {
-        console.error("Error de red al consultar stock:", err);
+      .catch(() => {
         setStock(0);
       });
   }, [id]);
+
+  const availableStock = stock !== null ? stock - cartQuantity : null;
 
   const handleDecrease = () => {
     setQuantity((q) => (q > 1 ? q - 1 : 1));
   };
 
   const handleIncrease = () => {
-    setQuantity((q) => q + 1);
+    setQuantity((q) => (availableStock !== null && q < availableStock ? q + 1 : q));
   };
 
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
+    if (availableStock === null || availableStock === 0 || quantity > availableStock) return;
     addToCart({
       id,
       title,
@@ -71,6 +70,7 @@ const Card: React.FC<CardProps> = ({
       quantity,
     });
     setClicked(true);
+    setQuantity(1); // Reiniciar cantidad a 1 después de agregar
     setTimeout(() => setClicked(false), 700);
   };
 
@@ -101,10 +101,13 @@ const Card: React.FC<CardProps> = ({
           <AddButton
             onClick={handleAddToCart}
             aria-label="Agregar al carrito"
+            disabled={availableStock === null || availableStock === 0 || quantity > availableStock}
             style={{
               transition: "all 0.3s",
               boxShadow: clicked ? "0 0 0 4px #22c55e55" : undefined,
               transform: clicked ? "scale(1.07)" : undefined,
+              opacity: availableStock === null || availableStock === 0 ? 0.5 : 1,
+              cursor: availableStock === null || availableStock === 0 ? "not-allowed" : "pointer",
             }}
           >
             <svg
@@ -155,7 +158,7 @@ const Card: React.FC<CardProps> = ({
         </div>
       </Actions>
       <div style={{ marginTop: "0.5rem", color: "#555", fontSize: "0.95rem" }}>
-        Stock en sucursal: {stock === null ? "Cargando..." : stock}
+        Stock en sucursal: {availableStock === null ? "Cargando..." : availableStock}
       </div>
     </CardWrapper>
   );
