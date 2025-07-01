@@ -12,6 +12,7 @@ router.register(r'marcas', MarcaViewSet, basename='marca')
 router.register(r'tipo_usuario', TipoUsuarioViewSet, basename='tipo_usuario')
 router.register(r'usuarios', UsuarioViewSet, basename='usuario')
 router.register(r'sucursales', SucursalViewSet, basename='sucursal')
+router.register(r'stocksucursal', StockSucursalViewSet, basename='stocksucursal')
 
 from .views import (
     vista_login, productos_list, producto_detalle, categorias_list,

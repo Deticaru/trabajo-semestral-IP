@@ -1,0 +1,7 @@
+TESTS UNITARIOS:
+
+1. Usar botón de cantidad de producto y reducir cantidad menor a 1. Verificar que cantidad sea = 1 y no <1
+2. Añadir a carrito cuando cantidad > stock.
+3. Añadir a carrito cuando cantidad < stock.
+4. Usar botón de cantidad de producto y aumentar en 1. Verificar que cantidad sea 2 (base+1).
+5. 

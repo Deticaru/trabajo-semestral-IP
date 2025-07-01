@@ -181,6 +181,16 @@ class StockSucursalViewSet(viewsets.ModelViewSet):
     queryset = StockSucursal.objects.all()
     serializer_class = StockSucursalSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        sucursal = self.request.query_params.get('sucursal')
+        producto = self.request.query_params.get('producto')
+        if sucursal:
+            queryset = queryset.filter(sucursal_id=sucursal)
+        if producto:
+            queryset = queryset.filter(producto_id=producto)
+        return queryset
+
 class PedidoViewSet(viewsets.ModelViewSet):
     queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer

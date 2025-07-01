@@ -25,12 +25,28 @@ const Card: React.FC<CardProps> = ({
 
   useEffect(() => {
     const sucursal = JSON.parse(localStorage.getItem("sucursal") || '{"id":1}');
-    fetch(`/api/stock/${sucursal.id}/?producto=${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        // Ajusta según la respuesta de tu API
-        if (Array.isArray(data) && data.length > 0) setStock(data[0].stock);
-        else setStock(0);
+    fetch(`/api/stocksucursal/?sucursal=${sucursal.id}&producto=${id}`)
+      .then(async (res) => {
+        if (!res.ok) {
+          // Solo lee el body una vez aquí si hay error
+          const text = await res.text();
+          console.error("Respuesta no OK:", res.status, text);
+          setStock(0);
+          return;
+        }
+        // Aquí solo intenta parsear como JSON
+        try {
+          const data = await res.json();
+          console.log("Respuesta JSON de stocksucursal:", data); // <-- log del resultado
+          if (Array.isArray(data) && data.length > 0) setStock(data[0].stock);
+          else setStock(0);
+        } catch (e) {
+          // Si falla el parseo, no intentes leer el body de nuevo
+          console.error("Error al parsear JSON:");
+          setStock(0);
+          const data = await res.json();
+          console.log("Respuesta JSON de stocksucursal:", data); // <-- log del resultado
+        }
       });
   }, [id]);
 
