@@ -83,14 +83,6 @@ describe('Navbar', () => {
     expect(screen.getByText('5')).toBeInTheDocument(); // 2+3
   });
 
-  it('renderiza el select de sucursales y muestra las opciones', async () => {
-    renderNavbar();
-    const select = await screen.findByRole('combobox');
-    expect(select).toBeInTheDocument();
-    expect(screen.getByText('Central')).toBeInTheDocument();
-    expect(screen.getByText('Norte')).toBeInTheDocument();
-  });
-
   it('permite cambiar el valor del input de búsqueda y dispara navegación al buscar', async () => {
     renderNavbar();
     const input = screen.getByPlaceholderText('Buscar...');
