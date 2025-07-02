@@ -15,6 +15,7 @@ npm install styled-components
 npm install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom #TESTS CON VITEST, NECESARIO PARA REACT
 npm install --save-dev @testing-library/user-event #x2
 npm install --save-dev jsdom #x3
+npm install --save-dev @testing-library/jest-dom
 #Api documentada
 http://localhost:8000/swagger/
 http://localhost:8000/redoc/
