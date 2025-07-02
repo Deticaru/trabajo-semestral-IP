@@ -5,7 +5,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import Card from '../src/components/Card/Card';
 
-// Mock mínimo para evitar error de contexto
 vi.mock('../../frontend/src/context/CartContext', () => ({
   useCart: () => ({ addToCart: () => {} })
 }));
