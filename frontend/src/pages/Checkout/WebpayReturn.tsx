@@ -32,7 +32,7 @@ const WebpayReturn = () => {
     }
 
     axios
-      .post("http://localhost:8000/api/webpay/commit/", {
+      .post(`${import.meta.env.VITE_API_URL}/api/webpay/commit/`, {
         token_ws // solo envía el token_ws
       })
       .then((res) => {

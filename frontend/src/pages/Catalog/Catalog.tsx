@@ -26,14 +26,14 @@ const Catalog = () => {
 
   // Traer categorías
   useEffect(() => {
-    fetch("http://localhost:8000/api/categorias/")
+    fetch(`${import.meta.env.VITE_API_URL}/api/categorias/`)
       .then((res) => res.json())
       .then(setCategories);
   }, []);
 
   // Traer productos
   useEffect(() => {
-    fetch("http://localhost:8000/api/productos/")
+    fetch(`${import.meta.env.VITE_API_URL}/api/productos/`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
@@ -51,7 +51,7 @@ const Catalog = () => {
       await Promise.all(
         products.map(async (product) => {
           try {
-            const res = await fetch(`http://localhost:8000/api/stocksucursal/?sucursal=${sucursal.id}&producto=${product.id}`);
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/stocksucursal/?sucursal=${sucursal.id}&producto=${product.id}`);
             if (!res.ok) {
               stocks[product.id] = 0;
               return;

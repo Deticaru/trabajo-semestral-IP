@@ -3,7 +3,7 @@ import AdminPanelMenu from "./AdminPanelMenu";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
-const API_URL = "http://localhost:8000/api/usuarios/";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/usuarios/`;
 
 const AdminUsersC = () => {
   const [users, setUsers] = useState<any[]>([]);
@@ -26,7 +26,7 @@ const AdminUsersC = () => {
   useEffect(fetchUsers, []);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/tipo_usuario/")
+    fetch(`${import.meta.env.VITE_API_URL}/api/tipo_usuario/`)
       .then((res) => res.json())
       .then(setTiposUsuario);
   }, []);

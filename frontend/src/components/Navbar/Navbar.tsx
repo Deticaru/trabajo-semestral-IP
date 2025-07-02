@@ -29,7 +29,7 @@ const Navbar = () => {
 
   useEffect(() => {
     // Fetch sucursales desde la API
-    fetch("http://localhost:8000/api/sucursales/")
+    fetch(`${import.meta.env.VITE_API_URL}/api/sucursales/`)
       .then((res) => res.json())
       .then((data) => {
         setSucursales(data);

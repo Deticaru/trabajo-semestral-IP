@@ -3,7 +3,7 @@ import AdminPanelMenu from "./AdminPanelMenu";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
-const API_URL = "http://localhost:8000/api/productos/";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/productos/`;
 
 const AdminProducts = () => {
   const [products, setProducts] = useState<any[]>([]);
@@ -25,10 +25,10 @@ const AdminProducts = () => {
   };
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/marcas/")
+    fetch(`${import.meta.env.VITE_API_URL}/api/marcas/`)
       .then((res) => res.json())
       .then(setBrands);
-    fetch("http://localhost:8000/api/categorias/")
+    fetch(`${import.meta.env.VITE_API_URL}/api/categorias/`)
       .then((res) => res.json())
       .then(setCategories);
   }, []);

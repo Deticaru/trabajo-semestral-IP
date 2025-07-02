@@ -16,7 +16,7 @@ const Product = () => {
 
   useEffect(() => {
     if (!id) return;
-    fetch(`http://localhost:8000/api/productos/${id}/`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/productos/${id}/`)
       .then((res) => res.json())
       .then((data) => setProduct(data))
       .catch(() => setProduct(null));
@@ -26,7 +26,7 @@ const Product = () => {
   useEffect(() => {
     if (!product) return;
     fetch(
-      `http://localhost:8000/api/moneda/convertir/?monto=${product.precio_producto}&moneda=CLP`
+      `${import.meta.env.VITE_API_URL}/api/moneda/convertir/?monto=${product.precio_producto}&moneda=CLP`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -48,7 +48,7 @@ const Product = () => {
                 product.imagenes && product.imagenes.length > 0
                   ? product.imagenes[0].imagen_producto.startsWith("http")
                     ? product.imagenes[0].imagen_producto
-                    : `http://localhost:8000${product.imagenes[0].imagen_producto}`
+                    : `${import.meta.env.VITE_API_URL}${product.imagenes[0].imagen_producto}`
                   : ""
               }
               alt={product.nom_producto}

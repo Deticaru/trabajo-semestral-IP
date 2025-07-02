@@ -30,7 +30,7 @@ const ContactForm = () => {
 
     try {
       // 1. Envía los datos al backend
-      await axios.post("http://localhost:8000/api/contacto/", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/contacto/`, {
         nombre: formData.name,
         correo: formData.email,
         mensaje: formData.message,

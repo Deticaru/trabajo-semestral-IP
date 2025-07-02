@@ -26,7 +26,7 @@ const Cart = () => {
       await Promise.all(
         cart.map(async (item) => {
           try {
-            const res = await fetch(`http://localhost:8000/api/stocksucursal/?sucursal=${sucursal.id}&producto=${item.id}`);
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/stocksucursal/?sucursal=${sucursal.id}&producto=${item.id}`);
             if (!res.ok) {
               stocks[item.id] = 0;
               return;

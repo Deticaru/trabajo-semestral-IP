@@ -67,7 +67,7 @@ const Checkout = () => {
       }
       // 1. Guardar carrito y datos en backend antes de redirigir a Webpay
       const pedidoRes = await axios.post(
-        "http://localhost:8000/api/guardar-carrito/",
+        `${import.meta.env.VITE_API_URL}/api/guardar-carrito/`,
         {
           cart,
           name: form.name,
@@ -98,7 +98,7 @@ const Checkout = () => {
         return_url: `${window.location.origin}/checkout/webpay-return`,
       };
       const res = await axios.post(
-        "http://localhost:8000/api/webpay/create/",
+        `${import.meta.env.VITE_API_URL}/api/webpay/create/`,
         orderData
       );
       const { url, token: webpayToken } = res.data;

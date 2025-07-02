@@ -3,7 +3,7 @@ import AdminPanelMenu from "./AdminPanelMenu";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 
-const API_URL = "http://localhost:8000/api/categorias/";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/categorias/`;
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState<any[]>([]);

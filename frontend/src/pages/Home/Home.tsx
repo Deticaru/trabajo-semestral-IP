@@ -15,7 +15,7 @@ const Home = () => {
 
   useEffect(() => {
     document.title = "Inicio";
-    fetch("http://localhost:8000/api/productos/")
+    fetch(`${import.meta.env.VITE_API_URL}/api/productos/`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
@@ -57,7 +57,7 @@ const Home = () => {
                   product.imagenes && product.imagenes.length > 0
                     ? product.imagenes[0].imagen_producto.startsWith("http")
                       ? product.imagenes[0].imagen_producto
-                      : `http://localhost:8000${product.imagenes[0].imagen_producto}`
+                      : `${import.meta.env.VITE_API_URL}${product.imagenes[0].imagen_producto}`
                     : "";
                 return (
                   <div
