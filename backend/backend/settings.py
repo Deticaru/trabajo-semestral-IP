@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-hlanj+mbu9o5vb!m3cgu(d&%(x-qhmi93su0^2#1ozhl0hg@5u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '13.221.92.181:8000']
 
 
 # Application definition
@@ -101,24 +102,24 @@ SWAGGER_USE_COMPAT_RENDERERS = False
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-"""DATABASES = {
-    'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_msql',
+        'NAME': 'ferremasdb',
         'USER': 'admin',
-        'PASSWORD': 'BEI8BV8gUiyfgJHrnfjC',
-        'HOST': 'database-1.cru60g2k0ouu.us-east-1.rds.amazonaws.com',
+        'PASSWORD': 'adminadminadmin1',
+        'HOST': 'ferremasdb.cru60g2k0ouu.us-east-1.rds.amazonaws.com',
         'PORT': '3306',
     }
 }
-"""
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

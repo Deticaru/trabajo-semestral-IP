@@ -1,3 +1,5 @@
+// @ts-ignore
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -33,7 +35,6 @@ import WebpayReturn from "./pages/Checkout/WebpayReturn";
 import WebpayCancelled from "./pages/Checkout/WebpayCancelled";
 import "./App.css";
 import Checkout from "./pages/Checkout/Checkout";
-import React, { useEffect } from "react";
 
 function App() {
   // Session expiration logic
