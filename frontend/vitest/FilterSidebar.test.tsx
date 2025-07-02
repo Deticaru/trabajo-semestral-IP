@@ -77,4 +77,54 @@ describe('FilterSidebar', () => {
     fireEvent.submit(screen.getByTestId('filter-form'));
     expect(onSearch).toHaveBeenCalled();
   });
+
+  it('renderiza correctamente la lista de categorías recibida por props', () => {
+    const customCategories = [
+      { id: 10, nom_categoria: 'Herramientas' },
+      { id: 20, nom_categoria: 'Materiales' },
+    ];
+    render(
+      <FilterSidebar categories={customCategories} filters={filters} onFilterChange={onFilterChange} onSearch={onSearch} />
+    );
+    expect(screen.getByText('Herramientas')).toBeInTheDocument();
+    expect(screen.getByText('Materiales')).toBeInTheDocument();
+  });
+
+  it('los checkboxes de categorías reflejan el estado de filters.categories', () => {
+    const checkedFilters = { ...filters, categories: [1] };
+    render(
+      <FilterSidebar categories={categories} filters={checkedFilters} onFilterChange={onFilterChange} onSearch={onSearch} />
+    );
+    const checkbox = screen.getByLabelText('Bebidas');
+    expect(checkbox).toBeChecked();
+    const otherCheckbox = screen.getByLabelText('Snacks');
+    expect(otherCheckbox).not.toBeChecked();
+  });
+
+  it('los valores de los inputs reflejan el estado de filters', () => {
+    const customFilters = {
+      search: 'martillo',
+      categories: [],
+      minPrice: '1000',
+      maxPrice: '5000',
+      marca: 'Stanley',
+    };
+    render(
+      <FilterSidebar categories={categories} filters={customFilters} onFilterChange={onFilterChange} onSearch={onSearch} />
+    );
+    expect(screen.getByPlaceholderText('Nombre del producto')).toHaveValue('martillo');
+    expect(screen.getByPlaceholderText('Mín')).toHaveValue(1000);
+    expect(screen.getByPlaceholderText('Máx')).toHaveValue(5000);
+    expect(screen.getByPlaceholderText('Marca')).toHaveValue('Stanley');
+  });
+
+  it('permite desmarcar una categoría si ya está seleccionada', () => {
+    const checkedFilters = { ...filters, categories: [1] };
+    render(
+      <FilterSidebar categories={categories} filters={checkedFilters} onFilterChange={onFilterChange} onSearch={onSearch} />
+    );
+    const checkbox = screen.getByLabelText('Bebidas');
+    fireEvent.click(checkbox);
+    expect(onFilterChange).toHaveBeenCalled();
+  });
 });
