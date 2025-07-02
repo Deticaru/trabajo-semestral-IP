@@ -12,6 +12,9 @@ npm install tailwindcss @tailwindcss/vite
 npm install --save-dev npm-run-all
 npm install styled-components
 
+npm install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom #TESTS CON VITEST, NECESARIO PARA REACT
+npm install --save-dev @testing-library/user-event #x2
+npm install --save-dev jsdom #x3
 #Api documentada
 http://localhost:8000/swagger/
 http://localhost:8000/redoc/
