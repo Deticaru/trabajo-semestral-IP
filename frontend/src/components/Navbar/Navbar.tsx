@@ -44,12 +44,33 @@ const Navbar = () => {
       });
   }, []);
 
-  const handleLogout = () => {
+  // Función para cerrar sesión y redirigir
+  const logoutAndRedirect = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     delete axios.defaults.headers.common["Authorization"];
     setIsAuthenticated(false);
-    navigate("/");
+    navigate("/login");
+  };
+
+  // Interceptor global de axios para detectar 401
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          logoutAndRedirect();
+        }
+        return Promise.reject(error);
+      }
+    );
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    logoutAndRedirect();
   };
 
   const handleSearch = (e: React.FormEvent) => {
