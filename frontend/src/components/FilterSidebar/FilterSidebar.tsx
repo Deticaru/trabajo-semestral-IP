@@ -16,7 +16,7 @@ const FilterSidebar = ({
 }) => (
   <Sidebar>
     <h3>Filtrar</h3>
-    <form onSubmit={onSearch}>
+    <form onSubmit={onSearch} data-testid="filter-form">
       <div>
         <strong>Buscar producto</strong>
         <input
