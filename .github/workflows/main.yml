@@ -7,23 +7,37 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  backend:
     runs-on: ubuntu-latest
     steps:
-    - uses:  actions/checkout@v4
-    
-    - name: Configurar Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-        
-    - name: Instalar dependencias
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest pytest-django
+      - uses: actions/checkout@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Instalar dependencias Python
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-django
+      - name: Ejecutar pruebas con pytest
+        run: |
+          cd backend
+          pytest ../tests/pytest
 
-    - name: Ejecutar pruebas con pytest
-      run: |
-        cd backend
-        pytest ../tests/pytest
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Instalar dependencias Node
+        run: |
+          cd frontend
+          npm ci
+      - name: Ejecutar pruebas con Vitest
+        run: |
+          cd frontend
+          npm run test
