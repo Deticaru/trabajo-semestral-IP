@@ -36,7 +36,7 @@ const Profile = () => {
       return;
     }
     axios
-      .get("http://127.0.0.1:8000/api/profile/", {
+      .get(`${import.meta.env.VITE_API_URL}/api/profile/`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -81,7 +81,7 @@ const Profile = () => {
       return;
     }
     try {
-      await axios.put("http://127.0.0.1:8000/api/profile/", updates, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/profile/`, updates, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Datos actualizados correctamente");

@@ -64,10 +64,11 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True #SÓLO PARA DESARROLLO
+CORS_ALLOW_ALL_ORIGINS = False #SÓLO PARA DESARROLLO
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Cambia el puerto si tu frontend usa otro
+    "http://localhost:5173", # desarrollo local
+    "http://13.221.92.181:3000", # ec2 producción
 ]
 
 #CORS_ALLOWED_ORIGINS = [

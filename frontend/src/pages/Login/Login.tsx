@@ -112,7 +112,7 @@ const Login: React.FC = () => {
     
     try {
       // CAMBIAR DESPUÉS
-      const response = await axios.post("http://127.0.0.1:8000/api/token/", {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/token/`, {
         correo_usuario,
         password,
       });
@@ -138,7 +138,7 @@ const Login: React.FC = () => {
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/registrar/", {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/registrar/`, {
         nom_usuario: nombre_usuario,
         correo_usuario,
         telefono_usuario: inputValue,
