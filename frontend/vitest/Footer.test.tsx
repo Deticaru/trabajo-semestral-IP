@@ -51,4 +51,11 @@ describe('Footer', () => {
       screen.getByText(new RegExp(`© ${year} Ferremas. Todos los derechos reservados.`))
     ).toBeInTheDocument();
   });
+
+  it('la sección principal tiene la clase bg-gray-900', () => {
+    render(<Footer />);
+    // Busca el elemento <footer> y verifica la clase
+    const footer = screen.getByRole('contentinfo');
+    expect(footer).toHaveClass('bg-red-800'); // La clase principal del footer
+  });
 });
