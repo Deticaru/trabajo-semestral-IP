@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
     <footer className="bg-red-800 text-gray-200 pt-10 pb-6 px-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-red-700">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-red-700">
         {/* Marca y descripción */}
         <div>
           <h2 className="text-2xl font-bold text-white mb-2">Ferremas</h2>
@@ -27,6 +27,38 @@ const Footer = () => {
             <li>
               <a href="/#contacto" className="hover:text-yellow-300 transition">
                 Contacto
+              </a>
+            </li>
+          </ul>
+        </div>
+        {/* Para Desarrolladores */}
+        <div>
+          <h3 className="text-lg font-semibold mb-3 text-white">
+            Desarrolladores
+          </h3>
+          <ul className="space-y-2">
+            <li>
+              <a
+                href="/developers"
+                className="hover:text-blue-300 transition flex items-center gap-1"
+              >
+                🔗 API Pública
+              </a>
+            </li>
+            <li>
+              <a
+                href="/developers/docs"
+                className="hover:text-blue-300 transition flex items-center gap-1"
+              >
+                📚 Documentación
+              </a>
+            </li>
+            <li>
+              <a
+                href="/developers"
+                className="hover:text-blue-300 transition flex items-center gap-1"
+              >
+                🚀 Integración
               </a>
             </li>
           </ul>

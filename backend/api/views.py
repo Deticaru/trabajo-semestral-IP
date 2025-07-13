@@ -211,6 +211,56 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
 
+# ============= VIEWS PARA API PÚBLICA =============
+# ViewSets de solo lectura para uso externo
+
+class PublicProductoViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API pública para consultar productos.
+    Solo permite operaciones de lectura (GET).
+    Filtros disponibles: ?categoria=1&marca=2
+    """
+    queryset = Producto.objects.all()
+    serializer_class = PublicProductoSerializer
+    permission_classes = [AllowAny]  # Sin autenticación requerida
+    
+    def get_queryset(self):
+        queryset = Producto.objects.all()
+        # Filtros opcionales
+        categoria = self.request.query_params.get('categoria')
+        marca = self.request.query_params.get('marca')
+        
+        if categoria:
+            queryset = queryset.filter(tag_producto__id=categoria)
+        if marca:
+            queryset = queryset.filter(marca_producto__id=marca)
+            
+        return queryset
+
+class PublicCategoriaViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API pública para consultar categorías.
+    """
+    queryset = Categoria.objects.all()
+    serializer_class = PublicCategoriaSerializer
+    permission_classes = [AllowAny]
+
+class PublicMarcaViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API pública para consultar marcas.
+    """
+    queryset = Marca.objects.all()
+    serializer_class = PublicMarcaSerializer
+    permission_classes = [AllowAny]
+
+class PublicSucursalViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API pública para consultar sucursales.
+    """
+    queryset = Sucursal.objects.all()
+    serializer_class = PublicSucursalSerializer
+    permission_classes = [AllowAny]
+
 # Métodos específicos
 @api_view(['GET'])
 def productos_list(request):

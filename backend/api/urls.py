@@ -1,6 +1,6 @@
 # urls.py
 from rest_framework.routers import DefaultRouter
-from django.urls import path
+from django.urls import path, include
 from .views import *
 
 # Incluir los nuevos endpoints
@@ -13,6 +13,14 @@ router.register(r'tipo_usuario', TipoUsuarioViewSet, basename='tipo_usuario')
 router.register(r'usuarios', UsuarioViewSet, basename='usuario')
 router.register(r'sucursales', SucursalViewSet, basename='sucursal')
 router.register(r'stocksucursal', StockSucursalViewSet, basename='stocksucursal')
+
+# ============= ROUTER PARA API PÚBLICA =============
+# Router separado para endpoints públicos de solo lectura
+public_router = DefaultRouter()
+public_router.register(r'productos', PublicProductoViewSet, basename='public-producto')
+public_router.register(r'categorias', PublicCategoriaViewSet, basename='public-categoria')
+public_router.register(r'marcas', PublicMarcaViewSet, basename='public-marca')
+public_router.register(r'sucursales', PublicSucursalViewSet, basename='public-sucursal')
 
 from .views import (
     vista_login, productos_list, producto_detalle, categorias_list,
@@ -36,3 +44,9 @@ urlpatterns = [
     path('productos', productos_list),
 ]
 urlpatterns += router.urls  # Esta línea agrega las rutas generadas por el router
+
+# ============= RUTAS PARA API PÚBLICA =============
+# Endpoints públicos bajo /api/public/
+urlpatterns += [
+    path('public/', include(public_router.urls)),
+]

@@ -31,6 +31,8 @@ import AdminProducts from "./pages/Administrator/AdminProducts";
 import AdminCategories from "./pages/Administrator/AdminCategories";
 import AdminBrands from "./pages/Administrator/AdminBrands";
 import AdminUsersC from "./pages/Administrator/AdminUsersC";
+import DeveloperPortal from "./pages/Developers/DeveloperPortal";
+import APIDocumentation from "./pages/Developers/APIDocumentation";
 import WebpayReturn from "./pages/Checkout/WebpayReturn";
 import WebpayCancelled from "./pages/Checkout/WebpayCancelled";
 import "./App.css";
@@ -59,7 +61,9 @@ function App() {
       timer = setTimeout(() => {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
-        delete (window as any).axios?.defaults?.headers?.common["Authorization"];
+        delete (window as any).axios?.defaults?.headers?.common[
+          "Authorization"
+        ];
         window.location.href = "/login?expired=1";
       }, EXPIRATION_MINUTES * 60 * 1000);
     };
@@ -111,6 +115,8 @@ function App() {
           />
           <Route path="/administrator/brands" element={<AdminBrands />} />
           <Route path="/administrator/usersC" element={<AdminUsersC />} />
+          <Route path="/developers" element={<DeveloperPortal />} />
+          <Route path="/developers/docs" element={<APIDocumentation />} />
           <Route path="/checkout/webpay-return" element={<WebpayReturn />} />
           <Route
             path="/checkout/webpay-cancelled"
