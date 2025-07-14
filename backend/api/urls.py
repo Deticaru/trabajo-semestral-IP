@@ -34,6 +34,7 @@ urlpatterns = [
     path('guardar-carrito/', guardar_carrito),
     path('registrar/', registrar_usuario, name='registrar_usuario'),
     path('profile/', profile, name='profile'),
+    path('reset-password/', reset_password, name='reset_password'),
     #path('productos/', productos_list),
     #path('productos/<str:codigo>/', producto_detalle),
     #path('categorias/', categorias_list),

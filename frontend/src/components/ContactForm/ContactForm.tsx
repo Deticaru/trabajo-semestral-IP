@@ -44,6 +44,7 @@ const ContactForm = () => {
           from_name: formData.name,
           from_email: formData.email,
           message: formData.message,
+          time: new Date().toLocaleString(), // 👈 Añade esta línea
         },
         PUBLIC_KEY
       );

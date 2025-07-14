@@ -369,3 +369,21 @@ def moneda_convertir(request):
         "monto_origen": monto,
         "monto_convertido": round(monto_usd, 2)
     })
+
+@api_view(['POST'])
+def reset_password(request):
+    data = request.data
+    correo = data.get('correo_usuario')
+    nueva_password = data.get('password')
+    if not correo or not nueva_password:
+        return Response({'success': False, 'error': 'Correo y nueva contraseña requeridos.'}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        from .models import Usuario
+        usuario = Usuario.objects.get(correo_usuario=correo)
+        usuario.set_password(nueva_password)
+        usuario.save()
+        return Response({'success': True, 'msg': 'Contraseña actualizada correctamente.'})
+    except Usuario.DoesNotExist:
+        return Response({'success': False, 'error': 'Usuario no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'success': False, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

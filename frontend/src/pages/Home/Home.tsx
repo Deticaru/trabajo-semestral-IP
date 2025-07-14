@@ -50,14 +50,18 @@ const Home = () => {
             {loading ? (
               <p className="col-span-3 text-center">Cargando productos...</p>
             ) : featuredProducts.length === 0 ? (
-              <p className="col-span-3 text-center">No hay productos disponibles.</p>
+              <p className="col-span-3 text-center">
+                No hay productos disponibles.
+              </p>
             ) : (
               featuredProducts.map((product) => {
                 const img =
                   product.imagenes && product.imagenes.length > 0
                     ? product.imagenes[0].imagen_producto.startsWith("http")
                       ? product.imagenes[0].imagen_producto
-                      : `${import.meta.env.VITE_API_URL}${product.imagenes[0].imagen_producto}`
+                      : `${import.meta.env.VITE_API_URL}${
+                          product.imagenes[0].imagen_producto
+                        }`
                     : "";
                 return (
                   <div
@@ -76,7 +80,9 @@ const Home = () => {
                       <h3 className="text-xl font-bold text-gray-900 mb-2">
                         {product.nom_producto}
                       </h3>
-                      <p className="text-gray-600 mb-4">{product.desc_producto}</p>
+                      <p className="text-gray-600 mb-4">
+                        {product.desc_producto}
+                      </p>
                       <div className="flex items-center justify-between">
                         <p className="text-lg font-bold text-red-700">
                           ${Number(product.precio_producto).toLocaleString()}
@@ -84,9 +90,13 @@ const Home = () => {
                         <span className="relative">
                           <button
                             className={`bg-red-100 hover:bg-red-200 text-red-800 font-medium py-2 px-4 rounded-md transition-all duration-300
-                              ${clickedId === product.id ? "ring-2 ring-green-400 scale-105 shadow-lg" : ""}
+                              ${
+                                clickedId === product.id
+                                  ? "ring-2 ring-green-400 scale-105 shadow-lg"
+                                  : ""
+                              }
                             `}
-                            onClick={e => {
+                            onClick={(e) => {
                               e.stopPropagation();
                               addToCart({
                                 id: product.id,
@@ -152,6 +162,16 @@ const Home = () => {
         <section className="py-8">
           <div className="max-w-5xl mx-auto flex items-center justify-center gap-8 overflow-x-auto">
             <img
+              src="https://i.pinimg.com/474x/b2/27/2f/b2272fbd8f0361de7232629ac2986d79.jpg"
+              alt="Bosch"
+              className="h-12 grayscale hover:grayscale-0 transition"
+            />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/b/bd/HiKOKI_logo.png"
+              alt="Bosch"
+              className="h-12 grayscale hover:grayscale-0 transition"
+            />
+            <img
               src="https://vgcibiza.com/templates/yootheme/cache/2a/bosch-2a28d282.jpeg"
               alt="Bosch"
               className="h-12 grayscale hover:grayscale-0 transition"
@@ -167,7 +187,7 @@ const Home = () => {
               className="h-12 grayscale hover:grayscale-0 transition"
             />
             <img
-              src="https://www.brandemia.org/wp-content/uploads/2013/06/stanley_logo_principal.jpg"
+              src="https://www.pampin.com.uy/imagenes/productos/detalle/SXH1530.jpg"
               alt="Stanley"
               className="h-12 grayscale hover:grayscale-0 transition"
             />
